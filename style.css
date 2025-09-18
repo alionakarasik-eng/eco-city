@@ -57,3 +57,25 @@ body {
 .tab-content:first-child {
   display: block;
 }
+
+#map {
+  border: 2px solid #4CAF50;
+  border-radius: 10px;
+}
+
+#rating {
+  background: #f9f9f9;
+  padding: 10px;
+  border-radius: 10px;
+  margin-top: 10px;
+}
+
+#rating ul {
+  list-style: none;
+  padding: 0;
+}
+
+#rating li {
+  padding: 5px 0;
+  font-weight: bold;
+}
