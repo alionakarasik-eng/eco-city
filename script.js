@@ -11,22 +11,51 @@ function openTab(tabId) {
   }
 }
 
-// === Мини-тест ===
-function initTest() {
-  const btn = document.getElementById("testBtn");
-  if (!btn) return;
+// === Логика теста ===
+document.addEventListener("DOMContentLoaded", () => {
+  let totalScore = 0;
+  let answeredQuestions = 0;
+  const totalQuestions = document.querySelectorAll("#ecoTestForm .question").length;
 
-  btn.addEventListener("click", () => {
-    const ans = prompt("Ты сортируешь мусор дома? (да/нет)");
-    if (!ans) return;
+  const questions = document.querySelectorAll("#ecoTestForm .question");
 
-    if (ans.toLowerCase().startsWith("д")) {
-      alert("Отлично! Ты вносишь вклад в сохранение природы 🌍");
-    } else {
-      alert("Попробуй начать сортировать — даже маленькие шаги важны 🌱");
-    }
+  questions.forEach(question => {
+    const checkboxes = question.querySelectorAll("input[type='checkbox']");
+    checkboxes.forEach(checkbox => {
+      checkbox.addEventListener("change", () => {
+        if (checkbox.checked) {
+          totalScore += parseInt(checkbox.value);
+          answeredQuestions++;
+
+          // Отмечаем вопрос как "пройденный"
+          question.classList.add("completed");
+
+          // Делаем все чекбоксы внутри неактивными
+          checkboxes.forEach(cb => cb.disabled = true);
+
+          // Обновляем результат
+          document.getElementById("result").textContent = `${totalScore} баллов`;
+
+          // Если все вопросы пройдены — показать итоговое сообщение
+          if (answeredQuestions === totalQuestions) {
+            let resultMessage = "";
+
+            if (totalScore <= 15) {
+              resultMessage = "🌱 Ваш экологический след низкий! Отличный результат, продолжайте в том же духе.";
+            } else if (totalScore <= 30) {
+              resultMessage = "🌍 Ваш экологический след средний. Есть над чем подумать — попробуйте сократить потребление ресурсов.";
+            } else {
+              resultMessage = "🔥 Ваш экологический след высокий! Постарайтесь пересмотреть привычки, чтобы уменьшить влияние на природу.";
+            }
+
+            document.getElementById("resultText").textContent = resultMessage;
+          }
+        }
+      });
+    });
   });
-}
+});
+
 
 // === Запуск функций после загрузки страницы ===
 document.addEventListener("DOMContentLoaded", () => {
