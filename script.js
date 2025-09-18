@@ -153,4 +153,14 @@ document.addEventListener("DOMContentLoaded", () => {
   initMap();
 });
 });
+// Функция переключения вкладок меню
+function openTab(tabId) {
+  // Скрываем все вкладки
+  document.querySelectorAll(".tab-content").forEach(tab => {
+    tab.style.display = "none";
+  });
+
+  // Показываем выбранную
+  document.getElementById(tabId).style.display = "block";
+}
 
