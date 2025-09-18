@@ -33,3 +33,50 @@
   <script src="script.js"></script>
 </body>
 </html>
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>Экология Алматы</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <!-- Боковое меню -->
+    <nav class="sidebar">
+      <h2>Меню</h2>
+      <ul>
+        <li><a href="#" onclick="openTab('main')">Главная</a></li>
+        <li><a href="#" onclick="openTab('about')">О проекте</a></li>
+        <li><a href="#" onclick="openTab('contact')">Контакты</a></li>
+        <li><a href="#" onclick="openTab('test')">Тест</a></li>
+      </ul>
+    </nav>
+
+    <!-- Основной контент -->
+    <main class="content">
+      <section id="main" class="tab-content">
+        <h1>Главная</h1>
+        <p>Добро пожаловать на сайт о развитии Алматы с учётом экологии 🌱</p>
+      </section>
+
+      <section id="about" class="tab-content" style="display:none;">
+        <h1>О проекте</h1>
+        <p>Здесь можно рассказать о целях и идеях проекта.</p>
+      </section>
+
+      <section id="contact" class="tab-content" style="display:none;">
+        <h1>Контакты</h1>
+        <p>Напиши нам на email: ecoalmaty@example.com</p>
+      </section>
+
+      <section id="test" class="tab-content" style="display:none;">
+        <h1>Мини-тест</h1>
+        <button id="testBtn">Пройти тест</button>
+      </section>
+    </main>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
