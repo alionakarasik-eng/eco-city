@@ -79,3 +79,54 @@ body {
   padding: 5px 0;
   font-weight: bold;
 }
+#ecoTestForm {
+  margin-top: 20px;
+}
+
+.question {
+  padding: 15px;
+  margin-bottom: 15px;
+  border: 2px solid #4CAF50;
+  border-radius: 10px;
+  background: #f9f9f9;
+  transition: opacity 0.5s;
+}
+
+.question p {
+  font-weight: bold;
+}
+
+.question.completed {
+  opacity: 0.5;
+}
+
+#resultBox {
+  margin-top: 20px;
+  padding: 15px;
+  border: 2px dashed #333;
+  border-radius: 10px;
+  background: #fff8e1;
+}
+// === Логика теста ===
+document.addEventListener("DOMContentLoaded", () => {
+  let totalScore = 0;
+
+  const questions = document.querySelectorAll("#ecoTestForm .question");
+
+  questions.forEach(question => {
+    const checkboxes = question.querySelectorAll("input[type='checkbox']");
+    checkboxes.forEach(checkbox => {
+      checkbox.addEventListener("change", () => {
+        if (checkbox.checked) {
+          totalScore += parseInt(checkbox.value);
+          // Отмечаем вопрос как "пройденный"
+          question.classList.add("completed");
+          // Делаем все чекбоксы внутри неактивными
+          checkboxes.forEach(cb => cb.disabled = true);
+        }
+        // Обновляем результат
+        document.getElementById("result").textContent = `${totalScore} баллов`;
+      });
+    });
+  });
+});
