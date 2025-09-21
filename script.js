@@ -1,18 +1,23 @@
+
 // === Переключение вкладок ===
 function openTab(tabId) {
+  // скрыть все
   document.querySelectorAll(".tab-content").forEach(tab => {
     tab.style.display = "none";
   });
+
+  // показать нужную
   const activeTab = document.getElementById(tabId);
   if (activeTab) {
     activeTab.style.display = "block";
 
-    // если открыта карта — инициализируем
+    // если это карта — запускаем инициализацию
     if (tabId === "ecoMap") {
       initMap();
     }
   }
 }
+
 
 // === Логика теста (несколько вариантов в одном вопросе) ===
 function initTest() {
