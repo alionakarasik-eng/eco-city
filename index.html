@@ -5,12 +5,11 @@
   <title>Экология города</title>
   <link rel="stylesheet" href="style.css">
 
-  <!-- Leaflet CSS -->
+  <!-- Leaflet для карт -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
-  <!-- Leaflet JS -->
   <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 </head>
-<body>
+<body onload="initTest()">
   <div class="container">
     <!-- Боковое меню -->
     <nav class="sidebar">
@@ -20,8 +19,8 @@
         <li><a href="#" onclick="openTab('about')">О проекте</a></li>
         <li><a href="#" onclick="openTab('contact')">Контакты</a></li>
         <li><a href="#" onclick="openTab('test')">Тест</a></li>
-        <li><a href="#" onclick="openTab('mapTab')">Эко карты</a></li>
-        <li><a href="#" onclick="openTab('city')">Эко город</a></li>
+        <li><a href="#" onclick="openTab('ecoMap')">Эко карты</a></li>
+        <li><a href="#" onclick="openTab('ecoCity')">Эко город</a></li>
       </ul>
     </nav>
 
@@ -30,91 +29,95 @@
       <!-- Главная -->
       <section id="main" class="tab-content">
         <h1>Главная</h1>
-        <p>Добро пожаловать в проект 🌱 Здесь вы узнаете о том, как наши привычки влияют на экологию.</p>
+        <p>Добро пожаловать в проект «Экологичные пути развития» 🌱</p>
       </section>
 
       <!-- О проекте -->
       <section id="about" class="tab-content" style="display:none;">
         <h1>О проекте</h1>
-        <p>Наш проект создан для того, чтобы помочь людям лучше понять свой экологический след и влияние на природу.</p>
+        <p>Здесь можно рассказать о целях и идеях проекта.</p>
       </section>
 
       <!-- Контакты -->
       <section id="contact" class="tab-content" style="display:none;">
         <h1>Контакты</h1>
-        <p>Email: eco@example.com</p>
+        <p>Здесь будут контактные данные и формы обратной связи.</p>
       </section>
 
       <!-- Тест -->
       <section id="test" class="tab-content" style="display:none;">
-        <h2>Экологический тест</h2>
+        <h2>Тест: Экологический след</h2>
+        <p id="testIntro">
+          Экологический след — это показатель того, сколько природных ресурсов человек или общество потребляет и сколько земли и воды нужно, чтобы восполнить эти ресурсы и переработать отходы.
+        </p>
+
         <form id="ecoTestForm">
           <!-- Вопрос 1 -->
           <div class="question" data-question="1">
             <p>Площадь жилья</p>
-            <label><input type="checkbox" value="7"> Небольшая площадь жилья</label><br>
-            <label><input type="checkbox" value="12"> Просторная и большая квартира</label><br>
-            <label><input type="checkbox" value="15"> Частный дом в один этаж</label><br>
-            <label><input type="checkbox" value="23"> Частный дом в два и более этажа</label>
+            <label><input type="checkbox" value="7"> небольшая площадь жилья</label><br>
+            <label><input type="checkbox" value="12"> просторная квартира</label><br>
+            <label><input type="checkbox" value="15"> частный дом до 1 этажа</label><br>
+            <label><input type="checkbox" value="23"> частный дом 2 этажа и более</label>
           </div>
 
           <!-- Вопрос 2 -->
           <div class="question" data-question="2">
             <p>Потребление энергии</p>
-            <label><input type="checkbox" value="120"> Используются нефть, газ или уголь</label><br>
-            <label><input type="checkbox" value="-10"> Регулируете отопление по погоде</label><br>
-            <label><input type="checkbox" value="-5"> В доме прохладно, одеваетесь теплее</label><br>
-            <label><input type="checkbox" value="2"> Используете возобновляемую энергию</label><br>
-            <label><input type="checkbox" value="-10"> Гасите свет, выходя из комнаты</label><br>
-            <label><input type="checkbox" value="-10"> Выключаете бытовые приборы после использования</label>
+            <label><input type="checkbox" value="120"> отопление нефтью, газом или углем</label><br>
+            <label><input type="checkbox" value="-10"> регулируете отопление по погоде</label><br>
+            <label><input type="checkbox" value="-5"> держите дом прохладным, одеваетесь теплее</label><br>
+            <label><input type="checkbox" value="2"> используете возобновляемую энергию</label><br>
+            <label><input type="checkbox" value="-10"> выключаете свет, выходя из комнаты</label><br>
+            <label><input type="checkbox" value="-10"> выключаете приборы после использования</label>
           </div>
 
           <!-- Вопрос 3 -->
           <div class="question" data-question="3">
             <p>Транспорт</p>
-            <label><input type="checkbox" value="3"> Пешком, велосипед или общественный транспорт</label><br>
-            <label><input type="checkbox" value="40"> Личный автомобиль</label><br>
-            <label><input type="checkbox" value="75"> Большой внедорожник</label><br>
-            <label><input type="checkbox" value="85"> Отдых — самолётом</label><br>
-            <label><input type="checkbox" value="15"> Отдых — поездом</label>
+            <label><input type="checkbox" value="3"> общественный транспорт / пешком / велосипед</label><br>
+            <label><input type="checkbox" value="40"> личный легковой автомобиль</label><br>
+            <label><input type="checkbox" value="75"> большой внедорожник</label><br>
+            <label><input type="checkbox" value="85"> перелеты самолетом</label><br>
+            <label><input type="checkbox" value="15"> поездки на поезде</label>
           </div>
 
           <!-- Вопрос 4 -->
           <div class="question" data-question="4">
             <p>Питание</p>
-            <label><input type="checkbox" value="2"> Местные продукты, готовите сами</label><br>
-            <label><input type="checkbox" value="14"> Замороженные продукты и полуфабрикаты</label><br>
-            <label><input type="checkbox" value="5"> Готовая еда или кафе</label><br>
-            <label><input type="checkbox" value="50"> Мясо 2–3 раза в неделю</label><br>
-            <label><input type="checkbox" value="85"> Мясо ежедневно</label><br>
-            <label><input type="checkbox" value="30"> Вегетарианская пища</label>
+            <label><input type="checkbox" value="2"> продукты местного производства</label><br>
+            <label><input type="checkbox" value="14"> замороженные продукты</label><br>
+            <label><input type="checkbox" value="5"> готовая еда из кафе или магазинов</label><br>
+            <label><input type="checkbox" value="50"> мясо 2-3 раза в неделю</label><br>
+            <label><input type="checkbox" value="85"> мясо ежедневно</label><br>
+            <label><input type="checkbox" value="30"> вегетарианская диета</label>
           </div>
 
           <!-- Вопрос 5 -->
           <div class="question" data-question="5">
             <p>Использование воды</p>
-            <label><input type="checkbox" value="2"> Ванна 1–2 раза в неделю</label><br>
-            <label><input type="checkbox" value="14"> Ванна ежедневно</label><br>
-            <label><input type="checkbox" value="4"> Душ ежедневно</label><br>
-            <label><input type="checkbox" value="4"> Полив/мойка из шланга</label>
+            <label><input type="checkbox" value="2"> ванна 1-2 раза в неделю</label><br>
+            <label><input type="checkbox" value="14"> ванна ежедневно</label><br>
+            <label><input type="checkbox" value="4"> душ ежедневно</label><br>
+            <label><input type="checkbox" value="4"> поливка участка / мойка машины из шланга</label>
           </div>
 
           <!-- Вопрос 6 -->
           <div class="question" data-question="6">
             <p>Использование бумаги</p>
-            <label><input type="checkbox" value="2"> Чтение бумажных книг</label><br>
-            <label><input type="checkbox" value="1"> Электронные книги</label><br>
-            <label><input type="checkbox" value="-1"> Книги из библиотеки</label><br>
-            <label><input type="checkbox" value="1"> Используете все варианты</label>
+            <label><input type="checkbox" value="2"> покупаете бумажные книги</label><br>
+            <label><input type="checkbox" value="1"> читаете электронные книги</label><br>
+            <label><input type="checkbox" value="-1"> берете книги в библиотеке</label><br>
+            <label><input type="checkbox" value="1"> используете все варианты</label>
           </div>
 
           <!-- Вопрос 7 -->
           <div class="question" data-question="7">
             <p>Бытовые отходы</p>
-            <label><input type="checkbox" value="-10"> Сдаёте банки и бутылки</label><br>
-            <label><input type="checkbox" value="-10"> Сдаёте макулатуру</label><br>
-            <label><input type="checkbox" value="-15"> Сортируете мусор</label><br>
-            <label><input type="checkbox" value="-10"> Используете упаковку повторно</label>
+            <label><input type="checkbox" value="-10"> сдаете банки и бутылки</label><br>
+            <label><input type="checkbox" value="-10"> сдаете макулатуру</label><br>
+            <label><input type="checkbox" value="-15"> сортируете мусор</label><br>
+            <label><input type="checkbox" value="-10"> повторно используете упаковку</label>
           </div>
 
           <!-- Результат -->
@@ -127,28 +130,12 @@
       </section>
 
       <!-- Эко карты -->
-      <section id="mapTab" class="tab-content" style="display:none;">
+      <section id="ecoMap" class="tab-content" style="display:none;">
         <h2>Эко карты</h2>
-        <div id="map" style="height: 400px;"></div>
-        <h3>Рейтинг загрязнённых районов</h3>
-        <ul id="ratingList"></ul>
+        <div id="map" style="height:400px;"></div>
       </section>
 
       <!-- Эко город -->
-      <section id="city" class="tab-content" style="display:none;">
-        <h2>Эко город</h2>
-        <p>Здесь будут графики, анимации и длинные тексты для сравнения экологической ситуации в разных городах.</p>
-        <div id="charts"></div>
-      </section>
-    </main>
-  </div>
+      <section id="ecoCity" class="tab-content" style="display:none;">
+        <h2>
 
-  <!-- Скрипт -->
-  <script src="script.js"></script>
-
-  <!-- Футер -->
-  <footer>
-    <p>© Проект «Экологичные пути развития» — 2025</p>
-  </footer>
-</body>
-</html>
