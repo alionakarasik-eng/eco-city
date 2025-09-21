@@ -3,278 +3,164 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Экология города - Устойчивое развитие</title>
-  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+  <title>Экология города</title>
   <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
 </head>
-<body>
+<body onload="openTab('main'); initTest();">
   <div class="container">
     <!-- Боковое меню -->
     <nav class="sidebar">
-      <div class="sidebar-header">
-        <h1>ЭкоГород</h1>
-        <p>Устойчивое развитие</p>
-      </div>
-      <div class="sidebar-nav">
-        <ul>
-          <li><a href="#" onclick="openTab('main'); return false;" class="nav-link active" data-tab="main">
-            <span class="nav-icon">🏠</span>Главная
-          </a></li>
-          <li><a href="#" onclick="openTab('about'); return false;" class="nav-link" data-tab="about">
-            <span class="nav-icon">ℹ️</span>О проекте
-          </a></li>
-          <li><a href="#" onclick="openTab('contact'); return false;" class="nav-link" data-tab="contact">
-            <span class="nav-icon">📞</span>Контакты
-          </a></li>
-          <li><a href="#" onclick="openTab('test'); return false;" class="nav-link" data-tab="test">
-            <span class="nav-icon">📝</span>Эко-тест
-          </a></li>
-          <li><a href="#" onclick="openTab('ecoMap'); return false;" class="nav-link" data-tab="ecoMap">
-            <span class="nav-icon">🗺️</span>Эко-карты
-          </a></li>
-          <li><a href="#" onclick="openTab('ecoCity'); return false;" class="nav-link" data-tab="ecoCity">
-            <span class="nav-icon">🏙️</span>Эко-город
-          </a></li>
-        </ul>
-      </div>
+      <h2>Меню</h2>
+      <ul>
+        <li><a href="#" onclick="openTab('main'); return false;">Главная</a></li>
+        <li><a href="#" onclick="openTab('about'); return false;">О проекте</a></li>
+        <li><a href="#" onclick="openTab('contact'); return false;">Контакты</a></li>
+        <li><a href="#" onclick="openTab('test'); return false;">Тест</a></li>
+        <li><a href="#" onclick="openTab('ecoMap'); return false;">Эко карты</a></li>
+        <li><a href="#" onclick="openTab('ecoCity'); return false;">Эко город</a></li>
+      </ul>
     </nav>
 
     <!-- Основной контент -->
     <main class="content">
       <!-- Главная -->
-      <section id="main" class="tab-content active">
-        <div class="content-header">
-          <h1>Добро пожаловать в Эко-Город</h1>
-          <p>Исследуйте пути устойчивого развития вашего города</p>
-        </div>
-        <div class="stats-grid">
-          <div class="stat-card">
-            <h3>Эко-индекс</h3>
-            <p class="stat-value">76%</p>
-            <p>Качество среды</p>
-          </div>
-          <div class="stat-card">
-            <h3>Озеленение</h3>
-            <p class="stat-value">45%</p>
-            <p>Территории города</p>
-          </div>
-          <div class="stat-card">
-            <h3>Переработка</h3>
-            <p class="stat-value">32%</p>
-            <p>Отходов</p>
-          </div>
-        </div>
+      <section id="main" class="tab-content">
+        <h1>Главная</h1>
+        <p>Добро пожаловать в проект «Экологичные пути развития» 🌱</p>
       </section>
 
       <!-- О проекте -->
-      <section id="about" class="tab-content">
-        <div class="content-header">
-          <h1>О проекте</h1>
-        </div>
-        <div class="about-content">
-          <p>Наш проект посвящен созданию устойчивой экологической среды в современных городах.</p>
-          <div class="features">
-            <div class="feature">
-              <h3>Мониторинг</h3>
-              <p>Отслеживание экологических показателей</p>
-            </div>
-            <div class="feature">
-              <h3>Образование</h3>
-              <p>Просвещение в области экологии</p>
-            </div>
-            <div class="feature">
-              <h3>Инновации</h3>
-              <p>Внедрение зеленых технологий</p>
-            </div>
-          </div>
-        </div>
+      <section id="about" class="tab-content" style="display:none;">
+        <h1>О проекте</h1>
+        <p>Здесь можно рассказать о целях и идеях проекта.</p>
       </section>
 
       <!-- Контакты -->
-      <section id="contact" class="tab-content">
-        <div class="content-header">
-          <h1>Контакты</h1>
-        </div>
-        <div class="contact-content">
-          <div class="contact-info">
-            <div class="contact-item">
-              <h3>Email</h3>
-              <p>eco-city@example.com</p>
-            </div>
-            <div class="contact-item">
-              <h3>Телефон</h3>
-              <p>+7 (777) 123-45-67</p>
-            </div>
-            <div class="contact-item">
-              <h3>Адрес</h3>
-              <p>г. Эко-Город, ул. Зеленая, 1</p>
+      <section id="contact" class="tab-content" style="display:none;">
+        <h1>Контакты</h1>
+        <p>Здесь будут контактные данные и формы обратной связи.</p>
+      </section>
+
+      <!-- Тест -->
+      <section id="test" class="tab-content" style="display:none;">
+        <h2>Тест: Экологический след</h2>
+        <p id="testIntro">
+          Экологический след — это показатель того, сколько природных ресурсов человек или общество потребляет и сколько земли и воды нужно, чтобы восполнить эти ресурсы и переработать отходы.
+        </p>
+
+        <form id="ecoTestForm">
+          <!-- Вопрос 1 -->
+          <div class="question" data-question="1">
+            <p>Площадь жилья</p>
+            <div class="options-column">
+              <label><input type="checkbox" name="q1" value="7"> небольшая площадь жилья</label>
+              <label><input type="checkbox" name="q1" value="12"> просторная квартира</label>
+              <label><input type="checkbox" name="q1" value="15"> частный дом до 1 этажа</label>
+              <label><input type="checkbox" name="q1" value="23"> частный дом 2 этажа и более</label>
             </div>
           </div>
-        </div>
-      </section>
-<!-- Тест -->
-<section id="test" class="tab-content">
-  <div class="content-header">
-    <h1>Экологический тест</h1>
-    <p>Узнайте ваш экологический след</p>
-  </div>
-  <div class="test-content">
-    <div id="testIntro">
-      <p>Экологический след — это показатель того, сколько природных ресурсов человек или общество потребляет и сколько земли и воды нужно, чтобы восполнить эти ресурсы и переработать отходы.</p>
-    </div>
 
-    <form id="ecoTestForm">
-      <!-- Все вопросы как были -->
-      ...
-      
-      <!-- Результат -->
-      <div id="resultBox">
-        <h3>Ваш экологический след:</h3>
-        <p id="result">0 баллов</p>
-        <p id="resultText"></p>
-      </div>
-    </form>
-  </div>
-</section>
-      <!-- Тест -->
-<section id="test" class="tab-content">
-  <div class="content-header">
-    <h1>Экологический тест</h1>
-    <p>Узнайте ваш экологический след</p>
-  </div>
-  <div class="test-content">
-    <div id="testIntro">
-      <p>Экологический след — это показатель того, сколько природных ресурсов человек или общество потребляет и сколько земли и воды нужно, чтобы восполнить эти ресурсы и переработать отходы.</p>
-    </div>
-
-    <form id="ecoTestForm">
-      <!-- Вопрос 1 -->
-      <div class="question" data-question="1">
-        <h3>Площадь жилья</h3>
-        <div class="options-column">
-          <label><input type="checkbox" name="q1" value="7"> Небольшая площадь жилья</label>
-          <label><input type="checkbox" name="q1" value="12"> Просторная квартира</label>
-          <label><input type="checkbox" name="q1" value="15"> Частный дом до 1 этажа</label>
-          <label><input type="checkbox" name="q1" value="23"> Частный дом 2 этажа и более</label>
-        </div>
-      </div>
-
-       <!-- Вопрос 2 -->
-            <div class="question" data-question="2">
-              <h3>Потребление энергии</h3>
-              <label><input type="checkbox" name="q2" value="120"> Отопление нефтью, газом или углем</label>
-              <label><input type="checkbox" name="q2" value="-10"> Регулируете отопление по погоде</label>
-              <label><input type="checkbox" name="q2" value="-5"> Держите дом прохладным, одеваетесь теплее</label>
-              <label><input type="checkbox" name="q2" value="2"> Используете возобновляемую энергию</label>
-              <label><input type="checkbox" name="q2" value="-10"> Выключаете свет, выходя из комнаты</label>
-              <label><input type="checkbox" name="q2" value="-10"> Выключаете приборы после использования</label>
+          <!-- Вопрос 2 -->
+          <div class="question" data-question="2">
+            <p>Потребление энергии</p>
+            <div class="options-column">
+              <label><input type="checkbox" name="q2" value="120"> отопление нефтью, газом или углем</label>
+              <label><input type="checkbox" name="q2" value="-10"> регулируете отопление по погоде</label>
+              <label><input type="checkbox" name="q2" value="-5"> держите дом прохладным, одеваетесь теплее</label>
+              <label><input type="checkbox" name="q2" value="2"> используете возобновляемую энергию</label>
+              <label><input type="checkbox" name="q2" value="-10"> выключаете свет, выходя из комнаты</label>
+              <label><input type="checkbox" name="q2" value="-10"> выключаете приборы после использования</label>
             </div>
+          </div>
 
-            <!-- Вопрос 3 -->
-            <div class="question" data-question="3">
-              <h3>Транспорт</h3>
-              <label><input type="checkbox" name="q3" value="3"> Общественный транспорт / пешком / велосипед</label>
-              <label><input type="checkbox" name="q3" value="40"> Личный легковой автомобиль</label>
-              <label><input type="checkbox" name="q3" value="75"> Большой внедорожник</label>
-              <label><input type="checkbox" name="q3" value="85"> Перелеты самолетом</label>
-              <label><input type="checkbox" name="q3" value="15"> Поездки на поезде</label>
+          <!-- Вопрос 3 -->
+          <div class="question" data-question="3">
+            <p>Транспорт</p>
+            <div class="options-column">
+              <label><input type="checkbox" name="q3" value="3"> общественный транспорт / пешком / велосипед</label>
+              <label><input type="checkbox" name="q3" value="40"> личный легковой автомобиль</label>
+              <label><input type="checkbox" name="q3" value="75"> большой внедорожник</label>
+              <label><input type="checkbox" name="q3" value="85"> перелеты самолетом</label>
+              <label><input type="checkbox" name="q3" value="15"> поездки на поезде</label>
             </div>
+          </div>
 
-            <!-- Вопрос 4 -->
-            <div class="question" data-question="4">
-              <h3>Питание</h3>
-              <label><input type="checkbox" name="q4" value="2"> Продукты местного производства</label>
-              <label><input type="checkbox" name="q4" value="14"> Замороженные продукты</label>
-              <label><input type="checkbox" name="q4" value="5"> Готовая еда из кафе или магазинов</label>
-              <label><input type="checkbox" name="q4" value="50"> Мясо 2-3 раза в неделю</label>
-              <label><input type="checkbox" name="q4" value="85"> Мясо ежедневно</label>
-              <label><input type="checkbox" name="q4" value="30"> Вегетарианская диета</label>
+          <!-- Вопрос 4 -->
+          <div class="question" data-question="4">
+            <p>Питание</p>
+            <div class="options-column">
+              <label><input type="checkbox" name="q4" value="2"> продукты местного производства</label>
+              <label><input type="checkbox" name="q4" value="14"> замороженные продукты</label>
+              <label><input type="checkbox" name="q4" value="5"> готовая еда из кафе или магазинов</label>
+              <label><input type="checkbox" name="q4" value="50"> мясо 2-3 раза в неделю</label>
+              <label><input type="checkbox" name="q4" value="85"> мясо ежедневно</label>
+              <label><input type="checkbox" name="q4" value="30"> вегетарианская диета</label>
             </div>
+          </div>
 
-            <!-- Вопрос 5 -->
-            <div class="question" data-question="5">
-              <h3>Использование воды</h3>
-              <label><input type="checkbox" name="q5" value="2"> Ванна 1-2 раза в неделю</label>
-              <label><input type="checkbox" name="q5" value="14"> Ванна ежедневно</label>
-              <label><input type="checkbox" name="q5" value="4"> Душ ежедневно</label>
-              <label><input type="checkbox" name="q5" value="4"> Поливка участка / мойка машины из шланга</label>
+          <!-- Вопрос 5 -->
+          <div class="question" data-question="5">
+            <p>Использование воды</p>
+            <div class="options-column">
+              <label><input type="checkbox" name="q5" value="2"> ванна 1-2 раза в неделю</label>
+              <label><input type="checkbox" name="q5" value="14"> ванна ежедневно</label>
+              <label><input type="checkbox" name="q5" value="4"> душ ежедневно</label>
+              <label><input type="checkbox" name="q5" value="4"> поливка участка / мойка машины из шланга</label>
             </div>
+          </div>
 
-            <!-- Вопрос 6 -->
-            <div class="question" data-question="6">
-              <h3>Использование бумаги</h3>
-              <label><input type="checkbox" name="q6" value="2"> Покупаете бумажные книги</label>
-              <label><input type="checkbox" name="q6" value="1"> Читаете электронные книги</label>
-              <label><input type="checkbox" name="q6" value="-1"> Берете книги в библиотеке</label>
-              <label><input type="checkbox" name="q6" value="1"> Используете все варианты</label>
+          <!-- Вопрос 6 -->
+          <div class="question" data-question="6">
+            <p>Использование бумаги</p>
+            <div class="options-column">
+              <label><input type="checkbox" name="q6" value="2"> покупаете бумажные книги</label>
+              <label><input type="checkbox" name="q6" value="1"> читаете электронные книги</label>
+              <label><input type="checkbox" name="q6" value="-1"> берете книги в библиотеке</label>
+              <label><input type="checkbox" name="q6" value="1"> используете все варианты</label>
             </div>
+          </div>
 
-            <!-- Вопрос 7 -->
-            <div class="question" data-question="7">
-              <h3>Бытовые отходы</h3>
-              <label><input type="checkbox" name="q7" value="-10"> Сдаете банки и бутылки</label>
-              <label><input type="checkbox" name="q7" value="-10"> Сдаете макулатуру</label>
-              <label><input type="checkbox" name="q7" value="-15"> Сортируете мусор</label>
-              <label><input type="checkbox" name="q7" value="-10"> Повторно используете упаковку</label>
-              <label><input type="checkbox" name="q7" value="30"> никак не сортируете мусор </label>
+          <!-- Вопрос 7 -->
+          <div class="question" data-question="7">
+            <p>Бытовые отходы</p>
+            <div class="options-column">
+              <label><input type="checkbox" name="q7" value="-10"> сдаете банки и бутылки</label>
+              <label><input type="checkbox" name="q7" value="-10"> сдаете макулатуру</label>
+              <label><input type="checkbox" name="q7" value="-15"> сортируете мусор</label>
+              <label><input type="checkbox" name="q7" value="-10"> повторно используете упаковку</label>
             </div>
-      
+          </div>
 
-      <div class="test-actions">
-        <button type="button" id="finishTest" class="btn-primary">Завершить тест</button>
-      </div>
+          <!-- Кнопка завершения теста -->
+          <div class="test-actions">
+            <button type="button" id="finishTest" class="btn-primary">Завершить тест</button>
+          </div>
 
-      <!-- Результат -->
-      <div id="resultBox" style="display: none;">
-        <h3>Ваш экологический след:</h3>
-        <p id="result">0 баллов</p>
-        <p id="resultText"></p>
-        <div id="recommendations"></div>
-      </div>
-    </form>
-  </div>
-</section>
-            <!-- Результат -->
-            <div id="resultBox">
-              <h3>Ваш экологический след:</h3>
-              <p id="result">0 баллов</p>
-              <p id="resultText"></p>
-            </div>
-          </form>
-        </div>
+          <!-- Результат -->
+          <div id="resultBox">
+            <h3>Ваш экологический след:</h3>
+            <p id="result">0 баллов</p>
+            <p id="resultText"></p>
+            <div id="recommendations"></div>
+          </div>
+        </form>
       </section>
 
       <!-- Эко карты -->
-      <section id="ecoMap" class="tab-content">
-        <div class="content-header">
-          <h1>Эко-карты</h1>
-          <p>Интерактивная карта экологических объектов</p>
+      <section id="ecoMap" class="tab-content" style="display:none;">
+        <h2>Эко карты</h2>
+        <div class="map-controls">
+          <button onclick="enableAddMode()">Добавить пункт приема</button>
+          <button onclick="showRecyclingPoints()">Показать все пункты</button>
         </div>
-        <div class="map-content">
-          <div id="map"></div>
-        </div>
+        <div id="map" style="height:400px;"></div>
       </section>
 
       <!-- Эко город -->
-      <section id="ecoCity" class="tab-content">
-        <div class="content-header">
-          <h1>Эко-город</h1>
-          <p>Проекты устойчивого развития</p>
-        </div>
-        <div class="ecocity-content">
-          <div class="project">
-            <h3>Зеленые зоны</h3>
-            <p>Создание парков и скверов</p>
-          </div>
-          <div class="project">
-            <h3>Велоинфраструктура</h3>
-            <p>Развитие велодорожек</p>
-          </div>
-          <div class="project">
-            <h3>Переработка отходов</h3>
-            <p>Внедрение раздельного сбора</p>
-          </div>
-        </div>
+      <section id="ecoCity" class="tab-content" style="display:none;">
+        <h2>Эко город</h2>
+        <p>Информация об экологичном развитии города</p>
       </section>
     </main>
   </div>
