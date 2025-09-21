@@ -137,27 +137,29 @@
   </div>
 </section>
       <!-- Тест -->
-      <section id="test" class="tab-content">
-        <div class="content-header">
-          <h1>Экологический тест</h1>
-          <p>Узнайте ваш экологический след</p>
+<section id="test" class="tab-content">
+  <div class="content-header">
+    <h1>Экологический тест</h1>
+    <p>Узнайте ваш экологический след</p>
+  </div>
+  <div class="test-content">
+    <div id="testIntro">
+      <p>Экологический след — это показатель того, сколько природных ресурсов человек или общество потребляет и сколько земли и воды нужно, чтобы восполнить эти ресурсы и переработать отходы.</p>
+    </div>
+
+    <form id="ecoTestForm">
+      <!-- Вопрос 1 -->
+      <div class="question" data-question="1">
+        <h3>Площадь жилья</h3>
+        <div class="options-column">
+          <label><input type="checkbox" name="q1" value="7"> Небольшая площадь жилья</label>
+          <label><input type="checkbox" name="q1" value="12"> Просторная квартира</label>
+          <label><input type="checkbox" name="q1" value="15"> Частный дом до 1 этажа</label>
+          <label><input type="checkbox" name="q1" value="23"> Частный дом 2 этажа и более</label>
         </div>
-        <div class="test-content">
-          <div id="testIntro">
-            <p>Экологический след — это показатель того, сколько природных ресурсов человек или общество потребляет и сколько земли и воды нужно, чтобы восполнить эти ресурсы и переработать отходы.</p>
-          </div>
+      </div>
 
-          <form id="ecoTestForm">
-            <!-- Вопрос 1 -->
-            <div class="question" data-question="1">
-              <h3>Площадь жилья</h3>
-              <label><input type="checkbox" name="q1" value="7"> Небольшая площадь жилья</label>
-              <label><input type="checkbox" name="q1" value="12"> Просторная квартира</label>
-              <label><input type="checkbox" name="q1" value="15"> Частный дом до 1 этажа</label>
-              <label><input type="checkbox" name="q1" value="23"> Частный дом 2 этажа и более</label>
-            </div>
-
-            <!-- Вопрос 2 -->
+       <!-- Вопрос 2 -->
             <div class="question" data-question="2">
               <h3>Потребление энергии</h3>
               <label><input type="checkbox" name="q2" value="120"> Отопление нефтью, газом или углем</label>
@@ -214,9 +216,24 @@
               <label><input type="checkbox" name="q7" value="-10"> Сдаете макулатуру</label>
               <label><input type="checkbox" name="q7" value="-15"> Сортируете мусор</label>
               <label><input type="checkbox" name="q7" value="-10"> Повторно используете упаковку</label>
-              <label><input type="</label>
+              <label><input type="checkbox" name="q7" value="30"> никак не сортируете мусор </label>
             </div>
+      
 
+      <div class="test-actions">
+        <button type="button" id="finishTest" class="btn-primary">Завершить тест</button>
+      </div>
+
+      <!-- Результат -->
+      <div id="resultBox" style="display: none;">
+        <h3>Ваш экологический след:</h3>
+        <p id="result">0 баллов</p>
+        <p id="resultText"></p>
+        <div id="recommendations"></div>
+      </div>
+    </form>
+  </div>
+</section>
             <!-- Результат -->
             <div id="resultBox">
               <h3>Ваш экологический след:</h3>
