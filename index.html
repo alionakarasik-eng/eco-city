@@ -93,6 +93,24 @@
 
     <!-- Основной контент -->
     <main class="content">
+      <!-- Главная -->
+      <section id="main" class="tab-content active">
+        <h1>🏠 Главная</h1>
+        <p>Добро пожаловать в проект «Экологичные пути развития» 🌱</p>
+      </section>
+
+      <!-- О проекте -->
+      <section id="about" class="tab-content">
+        <h1>ℹ️ О проекте</h1>
+        <p>Здесь можно рассказать о целях и идеях проекта.</p>
+      </section>
+
+      <!-- Контакты -->
+      <section id="contact" class="tab-content">
+        <h1>📞 Контакты</h1>
+        <p>Здесь будут контактные данные и формы обратной связи.</p>
+      </section>
+
       <!-- Тест -->
       <section id="test" class="tab-content">
         <h2>📝 Тест: Экологический след</h2>
@@ -101,7 +119,6 @@
         </p>
 
         <form id="ecoTestForm">
-          <!-- Вопросы теста (остаются без изменений) -->
           <!-- Вопрос 1 -->
           <div class="question" data-question="1">
             <p>Площадь жилья</p>
@@ -181,7 +198,6 @@
               <label><input type="checkbox" name="q7" value="-10"> сдаете макулатуру</label>
               <label><input type="checkbox" name="q7" value="-15"> сортируете мусор</label>
               <label><input type="checkbox" name="q7" value="-10"> повторно используете упаковку</label>
-              <label><input type="checkbox" name="q7" value="-10"> не делаете ничего из этого </label>
             </div>
           </div>
 
@@ -200,47 +216,93 @@
         </form>
       </section>
 
-      <!-- Остальные разделы (Главная, О проекте, Контакты, Эко карты, Эко город) -->
-      <!-- ... -->
-      
+      <!-- Эко карты -->
+      <section id="ecoMap" class="tab-content">
+        <h2>🗺️ Эко карты</h2>
+        <div id="map" style="height:400px;"></div>
+      </section>
+
+      <!-- Эко город -->
+      <section id="ecoCity" class="tab-content">
+        <h2>🏙️ Эко город</h2>
+        <p>Информация об экологичном развитии города</p>
+      </section>
     </main>
   </div>
 
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
   <script>
-    // === Конфигурация рекомендаций ===
+    // === ФУНКЦИИ ДЛЯ БОКОВОГО МЕНЮ ===
+    function openTab(tabId) {
+      console.log('Opening tab:', tabId);
+      // Скрыть все вкладки
+      document.querySelectorAll('.tab-content').forEach(tab => {
+        tab.style.display = "none";
+      });
+      
+      // Показать нужную вкладку
+      const activeTab = document.getElementById(tabId);
+      if (activeTab) {
+        activeTab.style.display = "block";
+      }
+    }
+
+    // Инициализация меню
+    function initMenu() {
+      console.log('Initializing menu...');
+      const menuLinks = document.querySelectorAll('.sidebar a[data-tab]');
+      console.log('Found menu links:', menuLinks.length);
+      
+      menuLinks.forEach(link => {
+        link.addEventListener('click', function(e) {
+          e.preventDefault();
+          const tabId = this.getAttribute('data-tab');
+          console.log('Menu click:', tabId);
+          openTab(tabId);
+        });
+      });
+      
+      // Активируем первую вкладку
+      openTab('main');
+    }
+
+    // === ФУНКЦИИ ДЛЯ ТЕСТА ===
     const recommendationsConfig = {
       'no_sorting': {
         triggers: ['q7_-10', 'q7_-15'],
-        message: '♻️ Важно сортировать мусор! Начните с разделения пластика, бумаги и стекла. Это уменьшает загрязнение и сохраняет ресурсы.',
+        message: '♻️ Важно сортировать мусор! Начните с разделения пластика, бумаги и стекла.',
         action: 'Посмотреть пункты приема на карте'
       },
       'no_recycling': {
         triggers: ['q7_-10'],
-        message: '📦 Сдача банок и бутылок помогает перерабатывать материалы и сокращает отходы на свалках.',
+        message: '📦 Сдача банок и бутылок помогает перерабатывать материалы.',
         action: 'Узнать о переработке'
       },
       'high_energy': {
         triggers: ['q2_120'],
-        message: '💡 Отопление углем/газом увеличивает углеродный след. Рассмотрите альтернативные источники энергии.',
+        message: '💡 Отопление углем/газом увеличивает углеродный след.',
         action: 'Советы по энергосбережению'
       },
       'meat_daily': {
         triggers: ['q4_85'],
-        message: '🌱 Ежедневное потребление мяса значительно увеличивает экологический след. Попробуйте растительные альтернативы.',
+        message: '🌱 Ежедневное потребление мяса увеличивает экологический след.',
         action: 'Рецепты вегетарианских блюд'
       }
     };
 
-    // === Основная логика теста ===
     function initTest() {
+      console.log('Initializing test...');
       const finishButton = document.getElementById('finishTest');
       if (finishButton) {
         finishButton.addEventListener('click', finishTest);
+        console.log('Finish button found and listener added');
+      } else {
+        console.log('Finish button NOT found');
       }
     }
 
-    // === Завершение теста ===
     function finishTest() {
+      console.log('Finishing test...');
       let totalScore = 0;
       
       // Считаем общий балл
@@ -257,7 +319,7 @@
       // Ваш оригинальный текст результатов
       let resultMessage = "";
       if (finalScore <= 190) {
-        resultMessage = "🌱 Ваш экологический след низкий. Если бы все люди жили так, как вы, нам хватило бы одной планеты";
+        resultMessage = "🌱 Ваш экологический след низкийЕсли бы вс люди жили так, как вы, нам хватило бы одной планеты";
       } else if (finalScore <= 300) {
         resultMessage = "🌍 Ваш экологический след средний. Если бы все люди жили также как вы, нам понадобилось бы более одной планеты";
       } else {
@@ -270,12 +332,10 @@
       showRecommendations();
     }
 
-    // === Показать рекомендации ===
     function showRecommendations() {
       const recommendationsContainer = document.getElementById("recommendations");
       recommendationsContainer.innerHTML = '';
       
-      // Проверить каждую рекомендацию
       Object.keys(recommendationsConfig).forEach(key => {
         const config = recommendationsConfig[key];
         
@@ -289,8 +349,7 @@
             recElement.className = 'recommendation';
             recElement.innerHTML = `
               <p>${config.message}</p>
-              <button onclick="handleRecommendationAction('${key}')" 
-                      class="btn-action">${config.action}</button>
+              <button onclick="handleRecommendationAction('${key}')" class="btn-action">${config.action}</button>
             `;
             recommendationsContainer.appendChild(recElement);
           }
@@ -298,49 +357,23 @@
       });
     }
 
-    // === Обработчик действий рекомендаций ===
     function handleRecommendationAction(actionType) {
       switch(actionType) {
         case 'no_sorting':
         case 'no_recycling':
-          alert('Переход к карте пунктов приема');
+          openTab('ecoMap');
           break;
-        case 'high_energy':
-          alert('Раздел об энергосбережении');
-          break;
-        case 'meat_daily':
-          alert('Вегетарианские рецепты');
-          break;
+        default:
+          alert('Функция в разработке');
       }
     }
 
-    // === Инициализация при загрузке ===
+    // === ОБЩАЯ ИНИЦИАЛИЗАЦИЯ ===
     document.addEventListener('DOMContentLoaded', function() {
+      console.log('DOM loaded, initializing...');
+      initMenu();
       initTest();
     });
-
-    // === Функции для меню (остаются без изменений) ===
-    function openTab(tabId) {
-      document.querySelectorAll('.tab-content').forEach(tab => {
-        tab.classList.remove('active');
-      });
-      
-      const activeTab = document.getElementById(tabId);
-      if (activeTab) {
-        activeTab.classList.add('active');
-      }
-    }
-
-    document.querySelectorAll('.sidebar a[data-tab]').forEach(link => {
-      link.addEventListener('click', function(e) {
-        e.preventDefault();
-        const tabId = this.getAttribute('data-tab');
-        openTab(tabId);
-      });
-    });
-
-    // Активируем первую вкладку
-    openTab('main');
   </script>
 </body>
 </html>
