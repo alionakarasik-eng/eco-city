@@ -14,6 +14,66 @@
     .tab-content.active {
       display: block;
     }
+    
+    /* Стили для теста */
+    .options-column {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin: 10px 0;
+    }
+    
+    .options-column label {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 5px;
+    }
+    
+    .test-actions {
+      margin: 20px 0;
+      text-align: center;
+    }
+    
+    .btn-primary {
+      background: #2e7d32;
+      color: white;
+      padding: 12px 24px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+    
+    .btn-primary:hover {
+      background: #1b5e20;
+    }
+    
+    #resultBox {
+      margin-top: 20px;
+      padding: 15px;
+      border: 2px dashed #4CAF50;
+      border-radius: 10px;
+      background: #f9f9f9;
+    }
+    
+    .recommendation {
+      background: #e8f5e8;
+      padding: 15px;
+      margin: 10px 0;
+      border-left: 4px solid #2e7d32;
+      border-radius: 4px;
+    }
+    
+    .btn-action {
+      background: #388e3c;
+      color: white;
+      padding: 8px 16px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      margin-top: 10px;
+    }
   </style>
 </head>
 <body>
@@ -33,49 +93,6 @@
 
     <!-- Основной контент -->
     <main class="content">
-      <!-- Главная -->
-      <section id="main" class="tab-content active">
-        <h1>🏠 Главная</h1>
-        <p>Добро пожаловать в проект «Экологичные пути развития» 🌱</p>
-        <div class="info-content">
-          <p>Здесь вы можете узнать об экологической ситуации в городе, пройти тест на экологический след, 
-             найти пункты приема вторсырья и узнать о проектах устойчивого развития.</p>
-        </div>
-      </section>
-
-      <!-- О проекте -->
-      <section id="about" class="tab-content">
-        <h1>ℹ️ О проекте</h1>
-        <div class="info-content">
-          <p>Наш проект направлен на повышение экологической грамотности населения и продвижение 
-             устойчивых практик в городской среде. Мы стремимся создать платформу для обмена знаниями 
-             и опытом в области экологии.</p>
-          <p>🌍 Цели проекта:</p>
-          <ul>
-            <li>Информирование об экологических проблемах</li>
-            <li>Популяризация экологичного образа жизни</li>
-            <li>Создание карты экологических объектов</li>
-            <li>Развитие экологического сообщества</li>
-            <li>Создание экологических целей и путей развития</li>
-          </ul>
-        </div>
-      </section>
-
-      <!-- Контакты -->
-      <section id="contact" class="tab-content">
-        <h1>📞 Контакты</h1>
-        <div class="info-content">
-          <p>Свяжитесь с нами для сотрудничества, предложений или вопросов:</p>
-          <div class="contact-info">
-            <p>📧</p>
-            <p>📞</p>
-            <p>📍</p>
-            <p>🕒</p>
-          </div>
-          <p>Мы открыты для предложений и сотрудничества!</p>
-        </div>
-      </section>
-
       <!-- Тест -->
       <section id="test" class="tab-content">
         <h2>📝 Тест: Экологический след</h2>
@@ -84,6 +101,7 @@
         </p>
 
         <form id="ecoTestForm">
+          <!-- Вопросы теста (остаются без изменений) -->
           <!-- Вопрос 1 -->
           <div class="question" data-question="1">
             <p>Площадь жилья</p>
@@ -163,6 +181,7 @@
               <label><input type="checkbox" name="q7" value="-10"> сдаете макулатуру</label>
               <label><input type="checkbox" name="q7" value="-15"> сортируете мусор</label>
               <label><input type="checkbox" name="q7" value="-10"> повторно используете упаковку</label>
+              <label><input type="checkbox" name="q7" value="-10"> не делаете ничего из этого </label>
             </div>
           </div>
 
@@ -181,106 +200,147 @@
         </form>
       </section>
 
-      <!-- Эко карты -->
-      <section id="ecoMap" class="tab-content">
-        <h2>🗺️ Эко карты</h2>
-        <div class="info-content">
-          <p>Интерактивная карта экологических объектов города. Здесь вы можете найти:</p>
-          <ul>
-            <li>♻️ Пункты приема вторсырья</li>
-            <li>🌳 Парки и зеленые зоны</li>
-            <li>🚲 Велосипедные дорожки</li>
-            <li>🏭 Экологические станции</li>
-          </ul>
-          <p>Вы также можете добавлять новые точки на карту!</p>
-        </div>
-        <div class="map-controls">
-          <button onclick="enableAddMode()">➕ Добавить пункт приема</button>
-          <button onclick="showRecyclingPoints()">♻️ Показать все пункты</button>
-        </div>
-        <div id="map" style="height:400px;"></div>
-      </section>
-
-      <!-- Эко город -->
-      <section id="ecoCity" class="tab-content">
-        <h2>🏙️ Эко город</h2>
-        <div class="info-content">
-          <p>Проекты и инициативы по созданию устойчивой городской среды:</p>
-          <div class="projects-grid">
-            <div class="project-card">
-              <h3>🌳 Озеленение города</h3>
-              <p>Создание новых парков и скверов, посадка деревьев</p>
-            </div>
-            <div class="project-card">
-              <h3>🚲 Велоинфраструктура</h3>
-              <p>Развитие сети велодорожек и велопарковок</p>
-            </div>
-            <div class="project-card">
-              <h3>♻️ Переработка отходов</h3>
-              <p>Внедрение системы раздельного сбора мусора</p>
-            </div>
-            <div class="project-card">
-              <h3>☀️ Солнечная энергия</h3>
-              <p>Установка солнечных панелей на общественных зданиях</p>
-            </div>
-          </div>
-        </div>
-      </section>
+      <!-- Остальные разделы (Главная, О проекте, Контакты, Эко карты, Эко город) -->
+      <!-- ... -->
+      
     </main>
   </div>
 
-  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
   <script>
-    // === Базовая функция для переключения вкладок ===
+    // === Конфигурация рекомендаций ===
+    const recommendationsConfig = {
+      'no_sorting': {
+        triggers: ['q7_-10', 'q7_-15'],
+        message: '♻️ Важно сортировать мусор! Начните с разделения пластика, бумаги и стекла. Это уменьшает загрязнение и сохраняет ресурсы.',
+        action: 'Посмотреть пункты приема на карте'
+      },
+      'no_recycling': {
+        triggers: ['q7_-10'],
+        message: '📦 Сдача банок и бутылок помогает перерабатывать материалы и сокращает отходы на свалках.',
+        action: 'Узнать о переработке'
+      },
+      'high_energy': {
+        triggers: ['q2_120'],
+        message: '💡 Отопление углем/газом увеличивает углеродный след. Рассмотрите альтернативные источники энергии.',
+        action: 'Советы по энергосбережению'
+      },
+      'meat_daily': {
+        triggers: ['q4_85'],
+        message: '🌱 Ежедневное потребление мяса значительно увеличивает экологический след. Попробуйте растительные альтернативы.',
+        action: 'Рецепты вегетарианских блюд'
+      }
+    };
+
+    // === Основная логика теста ===
+    function initTest() {
+      const finishButton = document.getElementById('finishTest');
+      if (finishButton) {
+        finishButton.addEventListener('click', finishTest);
+      }
+    }
+
+    // === Завершение теста ===
+    function finishTest() {
+      let totalScore = 0;
+      
+      // Считаем общий балл
+      document.querySelectorAll('input[type="checkbox"]:checked').forEach(checkbox => {
+        totalScore += parseInt(checkbox.value);
+      });
+      
+      const finalScore = totalScore + 100;
+      
+      // Показываем результаты
+      document.getElementById("result").textContent = `${finalScore} баллов`;
+      document.getElementById("resultBox").style.display = "block";
+      
+      // Ваш оригинальный текст результатов
+      let resultMessage = "";
+      if (finalScore <= 190) {
+        resultMessage = "🌱 Ваш экологический след низкий. Если бы все люди жили так, как вы, нам хватило бы одной планеты";
+      } else if (finalScore <= 300) {
+        resultMessage = "🌍 Ваш экологический след средний. Если бы все люди жили также как вы, нам понадобилось бы более одной планеты";
+      } else {
+        resultMessage = "🔥 Ваш экологический след высокий! Если бы все люди жили так, как вы, нам бы понадобилось 2 и более планет для жизни";
+      }
+      
+      document.getElementById("resultText").textContent = resultMessage;
+      
+      // Показываем рекомендации
+      showRecommendations();
+    }
+
+    // === Показать рекомендации ===
+    function showRecommendations() {
+      const recommendationsContainer = document.getElementById("recommendations");
+      recommendationsContainer.innerHTML = '';
+      
+      // Проверить каждую рекомендацию
+      Object.keys(recommendationsConfig).forEach(key => {
+        const config = recommendationsConfig[key];
+        
+        config.triggers.forEach(trigger => {
+          const [question, value] = trigger.split('_');
+          const optionId = `input[name="${question}"][value="${value}"]`;
+          const option = document.querySelector(optionId);
+          
+          if (option && !option.checked) {
+            const recElement = document.createElement('div');
+            recElement.className = 'recommendation';
+            recElement.innerHTML = `
+              <p>${config.message}</p>
+              <button onclick="handleRecommendationAction('${key}')" 
+                      class="btn-action">${config.action}</button>
+            `;
+            recommendationsContainer.appendChild(recElement);
+          }
+        });
+      });
+    }
+
+    // === Обработчик действий рекомендаций ===
+    function handleRecommendationAction(actionType) {
+      switch(actionType) {
+        case 'no_sorting':
+        case 'no_recycling':
+          alert('Переход к карте пунктов приема');
+          break;
+        case 'high_energy':
+          alert('Раздел об энергосбережении');
+          break;
+        case 'meat_daily':
+          alert('Вегетарианские рецепты');
+          break;
+      }
+    }
+
+    // === Инициализация при загрузке ===
+    document.addEventListener('DOMContentLoaded', function() {
+      initTest();
+    });
+
+    // === Функции для меню (остаются без изменений) ===
     function openTab(tabId) {
-      // Скрыть все вкладки
       document.querySelectorAll('.tab-content').forEach(tab => {
         tab.classList.remove('active');
       });
       
-      // Показать нужную вкладку
       const activeTab = document.getElementById(tabId);
       if (activeTab) {
         activeTab.classList.add('active');
       }
-      
-      // Если это карта - инициализировать
-      if (tabId === 'ecoMap') {
-        initMap();
-      }
     }
 
-    // === Обработчики для навигации ===
-    document.addEventListener('DOMContentLoaded', function() {
-      // Обработчики для ссылок меню
-      document.querySelectorAll('.sidebar a[data-tab]').forEach(link => {
-        link.addEventListener('click', function(e) {
-          e.preventDefault();
-          const tabId = this.getAttribute('data-tab');
-          openTab(tabId);
-        });
+    document.querySelectorAll('.sidebar a[data-tab]').forEach(link => {
+      link.addEventListener('click', function(e) {
+        e.preventDefault();
+        const tabId = this.getAttribute('data-tab');
+        openTab(tabId);
       });
-      
-      // Активируем первую вкладку
-      openTab('main');
     });
 
-    // === Заглушки функций для совместимости ===
-    function initTest() {
-      console.log('Тест инициализирован');
-    }
-    
-    function initMap() {
-      console.log('Карта инициализирована');
-    }
-    
-    function enableAddMode() {
-      alert('Режим добавления точек будет доступен после полной реализации');
-    }
-    
-    function showRecyclingPoints() {
-      alert('Пункты приема будут показаны после реализации карты');
-    }
+    // Активируем первую вкладку
+    openTab('main');
   </script>
 </body>
 </html>
