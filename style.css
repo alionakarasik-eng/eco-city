@@ -130,3 +130,38 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 });
+.options-column {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.options-column label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px;
+  border-radius: 5px;
+  transition: background-color 0.3s;
+}
+
+.test-actions {
+  margin: 20px 0;
+  text-align: center;
+}
+
+.btn-primary {
+  background: #2e7d32;
+  color: white;
+  padding: 12px 24px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.recommendation {
+  background: #e8f5e8;
+  padding: 15px;
+  margin: 10px 0;
+  border-left: 4px solid #2e7d32;
+}
