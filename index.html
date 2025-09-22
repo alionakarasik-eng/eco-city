@@ -223,10 +223,89 @@
       </section>
 
       <!-- Эко город -->
-      <section id="ecoCity" class="tab-content">
-        <h2>🏙️ Эко город</h2>
-        <p>Информация об экологичном развитии города</p>
-      </section>
+<section id="ecoCity" class="tab-content">
+  <h2>🏙️ Эко город</h2>
+  
+  <!-- Навигация внутри раздела -->
+  <div class="ecocity-nav">
+    <button class="tab-btn active" onclick="showEcoCityTab('articles')">📚 Статьи</button>
+    <button class="tab-btn" onclick="showEcoCityTab('forum')">💬 Форум</button>
+    <button class="tab-btn" onclick="showEcoCityTab('gallery')">🖼️ Галлерея</button>
+  </div>
+
+  <!-- Статьи -->
+  <div id="ecocity-articles" class="ecocity-tab active">
+    <h3>Полезные статьи об экологии</h3>
+    <div class="articles-grid">
+      <article class="article-card">
+        <img src="https://via.placeholder.com/300x200/4CAF50/white?text=Эко+советы" alt="Эко советы">
+        <div class="article-content">
+          <h4>10 простых способов уменьшить экослед</h4>
+          <p>Практические советы для повседневной жизни...</p>
+          <button onclick="openArticle(1)">Читать далее</button>
+        </div>
+      </article>
+      
+      <article class="article-card">
+        <img src="https://via.placeholder.com/300x200/2196F3/white?text=Переработка" alt="Переработка">
+        <div class="article-content">
+          <h4>Как правильно сортировать мусор в Алматы</h4>
+          <p>Полное руководство по раздельному сбору отходов...</p>
+          <button onclick="openArticle(2)">Читать далее</button>
+        </div>
+      </article>
+    </div>
+  </div>
+
+  <!-- Форум -->
+  <div id="ecocity-forum" class="ecocity-tab">
+    <h3>💬 Обсуждения</h3>
+    
+    <!-- Форма добавления комментария -->
+    <div class="comment-form">
+      <h4>Добавить комментарий</h4>
+      <form id="forumForm">
+        <input type="text" id="authorName" placeholder="Ваше имя" required>
+        <textarea id="commentText" placeholder="Ваше сообщение..." required></textarea>
+        
+        <!-- Загрузка изображения -->
+        <div class="image-upload">
+          <label>Добавить изображение/GIF:</label>
+          <input type="file" id="imageUpload" accept="image/*, .gif">
+          <div id="imagePreview"></div>
+        </div>
+        
+        <button type="submit">Опубликовать</button>
+      </form>
+    </div>
+
+    <!-- Список комментариев -->
+    <div class="comments-list" id="commentsList">
+      <!-- Комментарии будут загружаться здесь -->
+    </div>
+  </div>
+
+  <!-- Галлерея -->
+  <div id="ecocity-gallery" class="ecocity-tab">
+    <h3>🖼️ Экологические проекты</h3>
+    
+    <!-- Форма добавления в галлерею -->
+    <div class="gallery-upload">
+      <h4>Добавить в галлерею</h4>
+      <form id="galleryForm">
+        <input type="text" placeholder="Название проекта" required>
+        <textarea placeholder="Описание проекта..."></textarea>
+        <input type="file" accept="image/*, .gif" multiple>
+        <button type="submit">Добавить</button>
+      </form>
+    </div>
+
+    <div class="gallery-grid">
+      <!-- Контент галлереи -->
+    </div>
+  </div>
+</section>
+     
     </main>
   </div>
 
