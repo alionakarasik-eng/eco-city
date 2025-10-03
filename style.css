@@ -328,3 +328,163 @@ document.addEventListener("DOMContentLoaded", () => {
   width: 100%;
   padding: 10px;
 }
+/* Навигация Эко города */
+.ecocity-nav {
+  display: flex;
+  gap: 10px;
+  margin: 20px 0;
+  border-bottom: 2px solid #4CAF50;
+}
+
+.tab-btn {
+  padding: 10px 20px;
+  border: none;
+  background: #f5f5f5;
+  cursor: pointer;
+  border-radius: 5px 5px 0 0;
+  font-size: 16px;
+}
+
+.tab-btn.active {
+  background: #4CAF50;
+  color: white;
+}
+
+.ecocity-tab {
+  display: none;
+}
+
+.ecocity-tab.active {
+  display: block;
+}
+
+/* Статьи */
+.article-preview {
+  border: 2px solid #e0e0e0;
+  border-radius: 10px;
+  margin: 20px 0;
+  padding: 15px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  background: white;
+}
+
+.article-preview:hover {
+  border-color: #4CAF50;
+  box-shadow: 0 4px 8px rgba(76, 175, 80, 0.2);
+}
+
+.article-header {
+  display: flex;
+  gap: 20px;
+  align-items: flex-start;
+}
+
+.article-thumb {
+  width: 200px;
+  height: 120px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.article-info h4 {
+  margin: 0 0 10px 0;
+  color: #2e7d32;
+  font-size: 1.2em;
+}
+
+.article-excerpt {
+  color: #666;
+  margin: 0 0 10px 0;
+  line-height: 1.4;
+}
+
+.read-more {
+  color: #4CAF50;
+  font-size: 0.9em;
+  font-weight: bold;
+}
+
+.article-full {
+  display: none;
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 1px solid #e0e0e0;
+}
+
+.article-full.active {
+  display: block;
+}
+
+.article-main-image {
+  width: 100%;
+  max-height: 400px;
+  object-fit: cover;
+  border-radius: 10px;
+  margin-bottom: 20px;
+}
+
+.article-list {
+  margin-top: 20px;
+}
+
+.tip-item {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 25px;
+  padding: 15px;
+  background: #f9f9f9;
+  border-radius: 8px;
+  border-left: 4px solid #4CAF50;
+}
+
+.tip-number {
+  background: #4CAF50;
+  color: white;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  flex-shrink: 0;
+}
+
+.tip-content strong {
+  color: #2e7d32;
+  font-size: 1.1em;
+  display: block;
+  margin-bottom: 5px;
+}
+
+.tip-content p {
+  margin: 0;
+  color: #555;
+  line-height: 1.5;
+}
+
+/* Форум стили (уже должны быть) */
+.comment-form {
+  background: #f9f9f9;
+  padding: 20px;
+  border-radius: 10px;
+  margin-bottom: 30px;
+}
+
+.comment-form input,
+.comment-form textarea {
+  width: 100%;
+  padding: 10px;
+  margin: 5px 0 15px 0;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+}
+
+.comment {
+  background: white;
+  padding: 15px;
+  margin: 15px 0;
+  border-radius: 10px;
+  border-left: 4px solid #4CAF50;
+}
