@@ -329,3 +329,102 @@ document.addEventListener("DOMContentLoaded", function() {
     // Инициализируем тест
     initTest();
 });
+// === ФУНКЦИИ ДЛЯ СТАТЕЙ ===
+function toggleArticle(articleId) {
+  const articleFull = document.getElementById(`article-${articleId}`);
+  const isActive = articleFull.classList.contains('active');
+  
+  // Закрыть все статьи
+  document.querySelectorAll('.article-full').forEach(article => {
+    article.classList.remove('active');
+  });
+  
+  // Открыть/закрыть текущую статью
+  if (!isActive) {
+    articleFull.classList.add('active');
+  }
+}
+
+// === ФУНКЦИИ ДЛЯ ФОРУМА ===
+let comments = JSON.parse(localStorage.getItem('forumComments')) || [];
+
+function displayComments() {
+  const commentsList = document.getElementById('commentsList');
+  commentsList.innerHTML = '';
+  
+  comments.forEach((comment, index) => {
+    const commentDiv = document.createElement('div');
+    commentDiv.className = 'comment';
+    commentDiv.innerHTML = `
+      <div class="comment-header">
+        <span class="comment-author">${comment.author}</span>
+        <span class="comment-date">${comment.date}</span>
+      </div>
+      <div class="comment-text">${comment.text}</div>
+      ${comment.image ? `<img src="${comment.image}" class="comment-image" alt="Изображение">` : ''}
+      <button onclick="deleteComment(${index})" class="delete-btn">Удалить</button>
+    `;
+    commentsList.appendChild(commentDiv);
+  });
+}
+
+function addComment(author, text, image = null) {
+  const newComment = {
+    author: author,
+    text: text,
+    image: image,
+    date: new Date().toLocaleString('ru-RU')
+  };
+  
+  comments.unshift(newComment);
+  localStorage.setItem('forumComments', JSON.stringify(comments));
+  displayComments();
+}
+
+// === НАВИГАЦИЯ В РАЗДЕЛЕ ЭКО ГОРОДА ===
+function showEcoCityTab(tabName) {
+  // Скрыть все вкладки
+  document.querySelectorAll('.ecocity-tab').forEach(tab => {
+    tab.classList.remove('active');
+  });
+  
+  // Убрать активный класс у кнопок
+  document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.classList.remove('active');
+  });
+  
+  // Показать нужную вкладку
+  document.getElementById(`ecocity-${tabName}`).classList.add('active');
+  
+  // Активировать кнопку
+  event.target.classList.add('active');
+  
+  // Если открываем форум - загрузить комментарии
+  if (tabName === 'forum') {
+    displayComments();
+  }
+}
+
+// Инициализация при загрузке
+document.addEventListener('DOMContentLoaded', function() {
+  // Инициализация форума
+  const forumForm = document.getElementById('forumForm');
+  if (forumForm) {
+    forumForm.addEventListener('submit', function(e) {
+      e.preventDefault();
+      const author = document.getElementById('authorName').value;
+      const text = document.getElementById('commentText').value;
+      const imageFile = document.getElementById('imageUpload').files[0];
+      
+      if (imageFile) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          addComment(author, text, e.target.result);
+        };
+        reader.readAsDataURL(imageFile);
+      } else {
+        addComment(author, text);
+      }
+    });
+  }
+});
