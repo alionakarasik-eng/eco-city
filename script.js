@@ -1,6 +1,8 @@
 // === ОСНОВНЫЕ ПЕРЕМЕННЫЕ ===
 let comments = JSON.parse(localStorage.getItem('forumComments')) || [];
 let currentMap = null;
+let mapPoints = JSON.parse(localStorage.getItem('mapPoints')) || [];
+let isAddingPoint = false;
 
 // === КОНФИГУРАЦИЯ РЕКОМЕНДАЦИЙ ДЛЯ ТЕСТА ===
 const recommendationsConfig = {
@@ -23,6 +25,8 @@ const recommendationsConfig = {
 
 // === ФУНКЦИИ ДЛЯ БОКОВОГО МЕНЮ ===
 function openTab(tabId) {
+    console.log('Opening tab:', tabId);
+    
     // Скрыть все вкладки
     document.querySelectorAll('.tab-content').forEach(tab => {
         tab.style.display = "none";
@@ -36,7 +40,7 @@ function openTab(tabId) {
     
     // Если это карта — запускаем инициализацию
     if (tabId === "ecoMap") {
-        initMap();
+        setTimeout(initMap, 100); // Небольшая задержка для инициализации карты
     }
     
     // Если это тест - сбросить при каждом открытии
@@ -47,13 +51,16 @@ function openTab(tabId) {
 
 // === ФУНКЦИИ ДЛЯ ТЕСТА ===
 function initTest() {
+    console.log('Initializing test...');
     const finishButton = document.getElementById('finishTest');
     if (finishButton) {
         finishButton.addEventListener('click', finishTest);
+        console.log('Finish button listener added');
     }
 }
 
 function finishTest() {
+    console.log('Finishing test...');
     let totalScore = 0;
     
     // Считаем общий балл
@@ -70,7 +77,7 @@ function finishTest() {
     // Ваш оригинальный текст результатов
     let resultMessage = "";
     if (finalScore <= 190) {
-        resultMessage = "🌱 Ваш экологический след низкийЕсли бы вс люди жили так, как вы, нам хватило бы одной планеты";
+        resultMessage = "🌱 Ваш экологический след низкий. Если бы все люди жили так, как вы, нам хватило бы одной планеты";
     } else if (finalScore <= 300) {
         resultMessage = "🌍 Ваш экологический след средний. Если бы все люди жили также как вы, нам понадобилось бы более одной планеты";
     } else {
@@ -138,42 +145,47 @@ function toggleArticle(articleId) {
     
     const articleFull = document.getElementById(`article-${articleId}`);
     const articlePreview = document.querySelector(`[data-article="${articleId}"]`);
+    
+    if (!articleFull || !articlePreview) {
+        console.log('Article elements not found');
+        return;
+    }
+    
     const readMoreSpan = articlePreview.querySelector('.read-more');
     
     // Проверяем, открыта ли статья сейчас
-    const isActive = articleFull.classList.contains('active');
+    const isActive = articleFull.style.display === 'block' || articleFull.classList.contains('active');
     
     // Закрываем все другие статьи
     document.querySelectorAll('.article-full').forEach(article => {
-        if (article.id !== `article-${articleId}`) {
-            article.classList.remove('active');
-        }
+        article.style.display = 'none';
+        article.classList.remove('active');
     });
     
     // Сбрасываем все тексты "Свернуть" на "Развернуть" для других статей
-    document.querySelectorAll('.article-preview').forEach(preview => {
-        if (preview !== articlePreview) {
-            const otherReadMore = preview.querySelector('.read-more');
-            if (otherReadMore) {
-                otherReadMore.textContent = 'Нажмите чтобы развернуть ▼';
-            }
-        }
+    document.querySelectorAll('.read-more').forEach(span => {
+        span.textContent = 'Нажмите чтобы развернуть ▼';
     });
     
     // Переключаем текущую статью
     if (isActive) {
+        articleFull.style.display = 'none';
         articleFull.classList.remove('active');
-        readMoreSpan.textContent = 'Нажмите чтобы развернуть ▼';
+        if (readMoreSpan) readMoreSpan.textContent = 'Нажмите чтобы развернуть ▼';
     } else {
+        articleFull.style.display = 'block';
         articleFull.classList.add('active');
-        readMoreSpan.textContent = 'Свернуть ▲';
+        if (readMoreSpan) readMoreSpan.textContent = 'Свернуть ▲';
     }
 }
 
 // === ФУНКЦИИ ДЛЯ НАВИГАЦИИ В ЭКО-ГОРОДЕ ===
-function showEcoCityTab(tabName) {
+function showEcoCityTab(tabName, event) {
+    console.log('Showing tab:', tabName);
+    
     // Скрыть все вкладки эко-города
     document.querySelectorAll('.ecocity-tab').forEach(tab => {
+        tab.style.display = "none";
         tab.classList.remove('active');
     });
     
@@ -183,10 +195,16 @@ function showEcoCityTab(tabName) {
     });
     
     // Показать нужную вкладку
-    document.getElementById(`ecocity-${tabName}`).classList.add('active');
+    const targetTab = document.getElementById(`ecocity-${tabName}`);
+    if (targetTab) {
+        targetTab.style.display = "block";
+        targetTab.classList.add('active');
+    }
     
     // Активировать кнопку
-    event.target.classList.add('active');
+    if (event && event.target) {
+        event.target.classList.add('active');
+    }
     
     // Если открываем форум - загрузить комментарии
     if (tabName === 'forum') {
@@ -197,7 +215,14 @@ function showEcoCityTab(tabName) {
 // === ФУНКЦИИ ДЛЯ ФОРУМА ===
 function displayComments() {
     const commentsList = document.getElementById('commentsList');
+    if (!commentsList) return;
+    
     commentsList.innerHTML = '';
+    
+    if (comments.length === 0) {
+        commentsList.innerHTML = '<p style="text-align: center; color: #666;">Пока нет комментариев. Будьте первым!</p>';
+        return;
+    }
     
     comments.forEach((comment, index) => {
         const commentDiv = document.createElement('div');
@@ -238,27 +263,143 @@ function deleteComment(index) {
 
 // === ФУНКЦИИ ДЛЯ КАРТЫ ===
 function initMap() {
+    console.log('Initializing map...');
+    
     if (currentMap) {
         currentMap.remove();
     }
     
+    // Создаем карту с центром в Алматы
     currentMap = L.map("map").setView([43.238949, 76.889709], 12);
     
+    // Добавляем слой карты
     L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
         attribution: "&copy; OpenStreetMap contributors"
     }).addTo(currentMap);
     
+    // Добавляем основной маркер Алматы
     L.marker([43.238949, 76.889709]).addTo(currentMap)
-        .bindPopup("Алматы — экоситуация города")
+        .bindPopup("<b>Алматы</b><br>Экологическая ситуация города")
         .openPopup();
+    
+    // Загружаем сохраненные точки
+    loadMapPoints();
+    
+    console.log('Map initialized');
+}
+
+function loadMapPoints() {
+    if (!currentMap) return;
+    
+    // Очищаем старые маркеры
+    currentMap.eachLayer((layer) => {
+        if (layer instanceof L.Marker && layer !== currentMap.getPane('markerPane').firstChild) {
+            currentMap.removeLayer(layer);
+        }
+    });
+    
+    // Добавляем сохраненные точки
+    mapPoints.forEach(point => {
+        addPointToMap(point.lat, point.lng, point.name, point.description, false);
+    });
+}
+
+function addPointToMap(lat, lng, name, description, saveToStorage = true) {
+    if (!currentMap) return;
+    
+    const marker = L.marker([lat, lng]).addTo(currentMap);
+    
+    const popupContent = `
+        <div style="min-width: 200px;">
+            <strong>${name || 'Новая точка'}</strong>
+            ${description ? `<br><p>${description}</p>` : ''}
+            <br><small>Добавлено: ${new Date().toLocaleString('ru-RU')}</small>
+        </div>
+    `;
+    
+    marker.bindPopup(popupContent);
+    
+    if (saveToStorage) {
+        const newPoint = {
+            lat: lat,
+            lng: lng,
+            name: name,
+            description: description,
+            date: new Date().toLocaleString('ru-RU')
+        };
+        
+        mapPoints.push(newPoint);
+        localStorage.setItem('mapPoints', JSON.stringify(mapPoints));
+    }
 }
 
 function enableAddMode() {
-    alert('Режим добавления точек включен! Кликните на карте, чтобы добавить пункт приема.');
+    if (!currentMap) {
+        alert('Сначала дождитесь загрузки карты');
+        return;
+    }
+    
+    isAddingPoint = true;
+    document.getElementById('mapInfo').textContent = 'Кликните на карту, чтобы добавить точку. Для отмены нажмите Esc.';
+    document.getElementById('addPointBtn').textContent = '❌ Отменить добавление';
+    document.getElementById('addPointBtn').style.background = '#f44336';
+    
+    // Временно меняем курсор
+    currentMap.getContainer().style.cursor = 'crosshair';
+    
+    // Добавляем обработчик клика на карту
+    currentMap.on('click', handleMapClick);
+    
+    // Добавляем обработчик Esc для отмены
+    document.addEventListener('keydown', handleEscape);
 }
 
-function showRecyclingPoints() {
-    alert('Пункты приема будут показаны после добавления на карту');
+function handleMapClick(e) {
+    if (!isAddingPoint) return;
+    
+    const name = prompt('Введите название точки:');
+    if (name === null) {
+        disableAddMode();
+        return;
+    }
+    
+    const description = prompt('Введите описание точки (необязательно):') || '';
+    
+    addPointToMap(e.latlng.lat, e.latlng.lng, name, description);
+    disableAddMode();
+}
+
+function handleEscape(e) {
+    if (e.key === 'Escape' && isAddingPoint) {
+        disableAddMode();
+    }
+}
+
+function disableAddMode() {
+    isAddingPoint = false;
+    document.getElementById('mapInfo').textContent = 'Кликните на кнопку "Добавить точку", затем кликните на карту, чтобы отметить место';
+    document.getElementById('addPointBtn').textContent = '➕ Добавить точку на карту';
+    document.getElementById('addPointBtn').style.background = '';
+    
+    if (currentMap) {
+        currentMap.getContainer().style.cursor = '';
+        currentMap.off('click', handleMapClick);
+    }
+    
+    document.removeEventListener('keydown', handleEscape);
+}
+
+function clearAllPoints() {
+    if (confirm('Удалить все точки с карты?')) {
+        mapPoints = [];
+        localStorage.setItem('mapPoints', JSON.stringify(mapPoints));
+        
+        if (currentMap) {
+            loadMapPoints(); // Это перезагрузит карту без точек
+        }
+        
+        alert('Все точки удалены');
+    }
 }
 
 // === ОБЩАЯ ИНИЦИАЛИЗАЦИЯ ===
@@ -275,18 +416,34 @@ document.addEventListener('DOMContentLoaded', function() {
     });
     
     // Инициализация навигации в эко-городе
-    document.querySelectorAll('.tab-btn[data-ecotab]').forEach(btn => {
+    document.querySelectorAll('.tab-btn').forEach(btn => {
         btn.addEventListener('click', function(e) {
-            const tabName = this.getAttribute('data-ecotab');
-            showEcoCityTab(tabName);
+            const tabName = this.getAttribute('data-ecotab') || this.getAttribute('onclick')?.match(/showEcoCityTab\('(\w+)'\)/)?.[1];
+            if (tabName) {
+                showEcoCityTab(tabName, e);
+            }
         });
     });
     
-    // Инициализация статей
+    // Инициализация статей - ПРОСТОЙ И РАБОЧИЙ СПОСОБ
     document.querySelectorAll('.article-preview').forEach(article => {
-        article.addEventListener('click', function() {
-            const articleId = this.getAttribute('data-article');
-            toggleArticle(articleId);
+        article.addEventListener('click', function(e) {
+            // Если кликнули на кнопку "развернуть", используем её data-атрибут
+            if (e.target.classList.contains('read-more')) {
+                const articleId = e.target.getAttribute('data-article') || 
+                                 this.getAttribute('data-article') || 
+                                 this.getAttribute('onclick')?.match(/toggleArticle\((\d+)\)/)?.[1];
+                if (articleId) {
+                    toggleArticle(articleId);
+                }
+            } else {
+                // Если кликнули на саму статью, используем data-атрибут статьи
+                const articleId = this.getAttribute('data-article') || 
+                                 this.getAttribute('onclick')?.match(/toggleArticle\((\d+)\)/)?.[1];
+                if (articleId) {
+                    toggleArticle(articleId);
+                }
+            }
         });
     });
     
@@ -298,6 +455,11 @@ document.addEventListener('DOMContentLoaded', function() {
             const author = document.getElementById('authorName').value;
             const text = document.getElementById('commentText').value;
             const imageFile = document.getElementById('imageUpload').files[0];
+            
+            if (!author || !text) {
+                alert('Пожалуйста, заполните имя и сообщение');
+                return;
+            }
             
             if (imageFile) {
                 const reader = new FileReader();
@@ -327,8 +489,21 @@ document.addEventListener('DOMContentLoaded', function() {
                         `<img src="${e.target.result}" alt="Предпросмотр" style="max-width: 200px; max-height: 200px; border-radius: 5px; margin-top: 10px;">`;
                 };
                 reader.readAsDataURL(file);
+            } else {
+                document.getElementById('imagePreview').innerHTML = '';
             }
         });
+    }
+    
+    // Инициализация кнопок карты
+    const addPointBtn = document.getElementById('addPointBtn');
+    if (addPointBtn) {
+        addPointBtn.addEventListener('click', enableAddMode);
+    }
+    
+    const clearPointsBtn = document.getElementById('clearPointsBtn');
+    if (clearPointsBtn) {
+        clearPointsBtn.addEventListener('click', clearAllPoints);
     }
     
     // Инициализация теста
@@ -336,4 +511,15 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Активируем первую вкладку
     openTab('main');
+    
+    console.log('All initialization complete');
 });
+
+// Делаем функции глобальными для onclick атрибутов
+window.openTab = openTab;
+window.showEcoCityTab = showEcoCityTab;
+window.toggleArticle = toggleArticle;
+window.handleRecommendationAction = handleRecommendationAction;
+window.deleteComment = deleteComment;
+window.enableAddMode = enableAddMode;
+window.clearAllPoints = clearAllPoints;
