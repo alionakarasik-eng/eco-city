@@ -1,104 +1,73 @@
-// === Конфигурация рекомендаций ===
+// === ОСНОВНЫЕ ПЕРЕМЕННЫЕ ===
+let comments = JSON.parse(localStorage.getItem('forumComments')) || [];
+let currentMap = null;
+
+// === КОНФИГУРАЦИЯ РЕКОМЕНДАЦИЙ ДЛЯ ТЕСТА ===
 const recommendationsConfig = {
     'no_sorting': {
         triggers: ['q7_-10', 'q7_-15'],
-        message: '♻️ Важно сортировать мусор! Начните с разделения пластика, бумаги и стекла. Это уменьшает загрязнение и сохраняет ресурсы.',
+        message: '♻️ Важно сортировать мусор! Начните с разделения пластика, бумаги и стекла.',
         action: 'Посмотреть пункты приема на карте'
     },
     'no_recycling': {
         triggers: ['q7_-10'],
-        message: '📦 Сдача банок и бутылок помогает перерабатывать материалы и сокращает отходы на свалках.',
+        message: '📦 Сдача банок и бутылок помогает перерабатывать материалы.',
         action: 'Узнать о переработке'
     },
     'high_energy': {
         triggers: ['q2_120'],
-        message: '💡 Отопление углем/газом увеличивает углеродный след. Рассмотрите альтернативные источники энергии.',
+        message: '💡 Отопление углем/газом увеличивает углеродный след.',
         action: 'Советы по энергосбережению'
-    },
-    'meat_daily': {
-        triggers: ['q4_85'],
-        message: '🌱 Ежедневное потребление мяса значительно увеличивает экологический след. Попробуйте растительные альтернативы.',
-        action: 'Рецепты вегетарианских блюд'
-    },
-    'big_car': {
-        triggers: ['q3_75'],
-        message: '🚗 Большие внедорожники потребляют много топлива. Рассмотрите более экономичные варианты транспорта.',
-        action: 'Об экологичном транспорте'
     }
 };
 
-// === Переключение вкладок ===
+// === ФУНКЦИИ ДЛЯ БОКОВОГО МЕНЮ ===
 function openTab(tabId) {
-    // скрыть все
-    document.querySelectorAll(".tab-content").forEach(tab => {
+    // Скрыть все вкладки
+    document.querySelectorAll('.tab-content').forEach(tab => {
         tab.style.display = "none";
     });
-
-    // показать нужную
+    
+    // Показать нужную вкладку
     const activeTab = document.getElementById(tabId);
     if (activeTab) {
         activeTab.style.display = "block";
-
-        // если это карта — запускаем инициализацию
-        if (tabId === "ecoMap") {
-            initMap();
-        }
-        
-        // если это тест - сбросить при каждом открытии
-        if (tabId === "test") {
-            resetTest();
-        }
+    }
+    
+    // Если это карта — запускаем инициализацию
+    if (tabId === "ecoMap") {
+        initMap();
+    }
+    
+    // Если это тест - сбросить при каждом открытии
+    if (tabId === "test") {
+        resetTest();
     }
 }
 
-// === Логика теста ===
+// === ФУНКЦИИ ДЛЯ ТЕСТА ===
 function initTest() {
-    let totalScore = 0;
-    const totalQuestions = document.querySelectorAll("#ecoTestForm .question").length;
-    let answeredQuestions = new Set();
-
-    const questions = document.querySelectorAll("#ecoTestForm .question");
     const finishButton = document.getElementById('finishTest');
-
-    // Обработчик кнопки завершения
-    finishButton.addEventListener('click', finishTest);
-
-    questions.forEach(question => {
-        const checkboxes = question.querySelectorAll("input[type='checkbox']");
-
-        checkboxes.forEach(checkbox => {
-            checkbox.addEventListener("change", () => {
-                const value = parseInt(checkbox.value);
-
-                if (checkbox.checked) {
-                    totalScore += value;
-                } else {
-                    totalScore -= value;
-                }
-
-                if ([...checkboxes].some(cb => cb.checked)) {
-                    answeredQuestions.add(question.dataset.question);
-                    question.classList.add("completed");
-                } else {
-                    answeredQuestions.delete(question.dataset.question);
-                    question.classList.remove("completed");
-                }
-
-                document.getElementById("result").textContent = `${totalScore} баллов`;
-            });
-        });
-    });
+    if (finishButton) {
+        finishButton.addEventListener('click', finishTest);
+    }
 }
 
-// === Завершение теста ===
 function finishTest() {
-    const totalScore = parseInt(document.getElementById("result").textContent);
+    let totalScore = 0;
+    
+    // Считаем общий балл
+    document.querySelectorAll('input[type="checkbox"]:checked').forEach(checkbox => {
+        totalScore += parseInt(checkbox.value);
+    });
+    
     const finalScore = totalScore + 100;
     
+    // Показываем результаты
     document.getElementById("result").textContent = `${finalScore} баллов`;
     document.getElementById("resultBox").style.display = "block";
-
-    // Сохраняем ваш оригинальный текст результатов
+    
+    // Ваш оригинальный текст результатов
     let resultMessage = "";
     if (finalScore <= 190) {
         resultMessage = "🌱 Ваш экологический след низкийЕсли бы вс люди жили так, как вы, нам хватило бы одной планеты";
@@ -114,15 +83,10 @@ function finishTest() {
     showRecommendations();
 }
 
-// === Показать рекомендации ===
 function showRecommendations() {
     const recommendationsContainer = document.getElementById("recommendations");
     recommendationsContainer.innerHTML = '';
     
-    const selectedOptions = getSelectedOptions();
-    const shownRecommendations = new Set();
-    
-    // Проверить каждую рекомендацию
     Object.keys(recommendationsConfig).forEach(key => {
         const config = recommendationsConfig[key];
         
@@ -131,66 +95,23 @@ function showRecommendations() {
             const optionId = `input[name="${question}"][value="${value}"]`;
             const option = document.querySelector(optionId);
             
-            if (option && !option.checked && !shownRecommendations.has(key)) {
+            if (option && !option.checked) {
                 const recElement = document.createElement('div');
                 recElement.className = 'recommendation';
                 recElement.innerHTML = `
                     <p>${config.message}</p>
-                    <button onclick="handleRecommendationAction('${key}')" 
-                            class="btn-action">${config.action}</button>
+                    <button onclick="handleRecommendationAction('${key}')" class="btn-action">${config.action}</button>
                 `;
                 recommendationsContainer.appendChild(recElement);
-                shownRecommendations.add(key);
             }
         });
     });
 }
 
-// === Получить выбранные опции ===
-function getSelectedOptions() {
-    const selected = {};
-    document.querySelectorAll('input[type="checkbox"]:checked').forEach(checkbox => {
-        const name = checkbox.getAttribute('name');
-        const value = checkbox.value;
-        if (!selected[name]) selected[name] = [];
-        selected[name].push(value);
-    });
-    return selected;
-}
-
-// === Обработчик действий рекомендаций ===
-function handleRecommendationAction(actionType) {
-    switch(actionType) {
-        case 'no_sorting':
-        case 'no_recycling':
-            openTab('ecoMap');
-            showRecyclingPoints();
-            break;
-        case 'high_energy':
-            alert('Экономить энергию очень важно, потому что при её производстве сжигаются природные ресурсы и в атмосферу попадают вредные выбросы. Когда мы выключаем свет и приборы, которыми не пользуемся, мы уменьшаем нагрузку на природу и сокращаем счета за электричество. Маленькая привычка каждого помогает сохранить большие ресурсы для будущего.');
-            break;
-        case 'meat_daily':
-            alert('Покупать продукты местного производства очень важно, потому что они обычно свежие, полезнее и поддерживают фермеров и производителей в нашем регионе. Такие продукты не нужно везти издалека, значит, тратится меньше топлива и в атмосферу попадает меньше вредных выбросов. Когда мы выбираем местные продукты, мы не только заботимся о своём здоровье, но и помогаем развивать экономику своего города и страны.!');
-            break;
-        case 'big_car':
-            alert('Экологичный транспорт — это способы передвижения, которые меньше всего загрязняют окружающую среду. К таким видам относят пешие прогулки, велосипед, электросамокаты, электромобили и, конечно, общественный транспорт, который перевозит сразу много людей и тем самым снижает выбросы на одного пассажира.
-
-Лучше всего отдавать предпочтение ходьбе и велосипеду на короткие расстояния, а в городе чаще пользоваться автобусами, метро или трамваями. Если нужен автомобиль, экологичнее выбирать электромобиль или гибрид. Чем больше людей переходят на экологичный транспорт, тем чище становится воздух и комфортнее сама городская среда.');
-            break;
-    }
-}
-
-// === Сброс теста ===
 function resetTest() {
     // Сбросить все checkbox
     document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
         checkbox.checked = false;
-        checkbox.disabled = false;
-    });
-    
-    // Сбросить классы completed
-    document.querySelectorAll('.question').forEach(question => {
-        question.classList.remove('completed');
     });
     
     // Сбросить результат
@@ -200,231 +121,219 @@ function resetTest() {
     document.getElementById("recommendations").innerHTML = "";
 }
 
-// === Карта с пунктами приема ===
-let recyclingPoints = [];
-let mapInitialized = false;
-
-function initMap() {
-    if (mapInitialized) return;
-    mapInitialized = true;
-
-    const map = L.map("map").setView([43.238949, 76.889709], 12); // Алматы
-
-    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-        attribution: "&copy; OpenStreetMap contributors"
-    }).addTo(map);
-
-    // Основной маркер
-    L.marker([43.238949, 76.889709]).addTo(map)
-        .bindPopup("Алматы — экоситуация города")
-        .openPopup();
-
-    // Загрузка пунктов приема из localStorage
-    loadRecyclingPoints(map);
-    
-    // Обработчик клика для добавления новых точек
-    map.on('click', function(e) {
-        addNewRecyclingPoint(e.latlng, map);
-    });
-    
-    window.currentMap = map;
-}
-
-// === Загрузка пунктов приема ===
-function loadRecyclingPoints(map) {
-    const savedPoints = JSON.parse(localStorage.getItem('recyclingPoints')) || [];
-    
-    savedPoints.forEach(point => {
-        addPointToMap(point, map);
-    });
-}
-
-// === Добавление точки на карту ===
-function addPointToMap(point, map) {
-    const marker = L.marker([point.lat, point.lng])
-        .addTo(map)
-        .bindPopup(`
-            <b>${point.name || 'Пункт приема'}</b><br>
-            ${point.description || ''}<br>
-            ${point.price ? `Цена: ${point.price}` : ''}
-        `);
-    
-    recyclingPoints.push({
-        marker: marker,
-        data: point
-    });
-}
-
-// === Добавление новой точки ===
-function addNewRecyclingPoint(latlng, map) {
-    const name = prompt('Название пункта приема:');
-    if (!name) return;
-    
-    const description = prompt('Что принимают (пластик, стекло, бумага и т.д.):');
-    const price = prompt('Цена за кг (если есть):');
-    
-    const newPoint = {
-        id: Date.now(),
-        lat: latlng.lat,
-        lng: latlng.lng,
-        name: name,
-        description: description,
-        price: price,
-        addedBy: 'user'
-    };
-    
-    addPointToMap(newPoint, map);
-    savePoints();
-}
-
-// === Сохранение точек ===
-function savePoints() {
-    const pointsData = recyclingPoints.map(p => p.data);
-    localStorage.setItem('recyclingPoints', JSON.stringify(pointsData));
-}
-
-// === Показать пункты приема ===
-function showRecyclingPoints() {
-    if (window.currentMap && recyclingPoints.length > 0) {
-        recyclingPoints.forEach(point => {
-            point.marker.openPopup();
-        });
-    } else {
-        alert('Пункты приема будут показаны после добавления на карту');
+function handleRecommendationAction(actionType) {
+    switch(actionType) {
+        case 'no_sorting':
+        case 'no_recycling':
+            openTab('ecoMap');
+            break;
+        default:
+            alert('Функция в разработке');
     }
 }
 
-// === Инициализация при загрузке ===
-document.addEventListener("DOMContentLoaded", function() {
-    // Добавляем кнопку завершения теста в HTML
-    const testForm = document.getElementById('ecoTestForm');
-    if (testForm && !document.getElementById('finishTest')) {
-        const finishButton = document.createElement('div');
-        finishButton.className = 'test-actions';
-        finishButton.innerHTML = '<button type="button" id="finishTest" class="btn-primary">Завершить тест</button>';
-        testForm.appendChild(finishButton);
-    }
-    
-    // Добавляем контейнер для рекомендаций
-    const resultBox = document.getElementById('resultBox');
-    if (resultBox && !document.getElementById('recommendations')) {
-        const recommendationsDiv = document.createElement('div');
-        recommendationsDiv.id = 'recommendations';
-        resultBox.appendChild(recommendationsDiv);
-    }
-    
-    // Преобразуем варианты ответов в столбик
-    document.querySelectorAll('.question').forEach(question => {
-        const labels = question.querySelectorAll('label');
-        const optionsColumn = document.createElement('div');
-        optionsColumn.className = 'options-column';
-        
-        labels.forEach(label => {
-            optionsColumn.appendChild(label.cloneNode(true));
-        });
-        
-        question.innerHTML = question.querySelector('p').outerHTML + optionsColumn.outerHTML;
-    });
-    
-    // Инициализируем тест
-    initTest();
-});
-// === ФУНКЦИИ ДЛЯ СТАТЕЙ ===
+// === ФУНКЦИИ ДЛЯ СТАТЕЙ В РАЗДЕЛЕ ЭКО-ГОРОДА ===
 function toggleArticle(articleId) {
-  const articleFull = document.getElementById(`article-${articleId}`);
-  const isActive = articleFull.classList.contains('active');
-  
-  // Закрыть все статьи
-  document.querySelectorAll('.article-full').forEach(article => {
-    article.classList.remove('active');
-  });
-  
-  // Открыть/закрыть текущую статью
-  if (!isActive) {
-    articleFull.classList.add('active');
-  }
+    console.log('Toggle article:', articleId);
+    
+    const articleFull = document.getElementById(`article-${articleId}`);
+    const articlePreview = document.querySelector(`[data-article="${articleId}"]`);
+    const readMoreSpan = articlePreview.querySelector('.read-more');
+    
+    // Проверяем, открыта ли статья сейчас
+    const isActive = articleFull.classList.contains('active');
+    
+    // Закрываем все другие статьи
+    document.querySelectorAll('.article-full').forEach(article => {
+        if (article.id !== `article-${articleId}`) {
+            article.classList.remove('active');
+        }
+    });
+    
+    // Сбрасываем все тексты "Свернуть" на "Развернуть" для других статей
+    document.querySelectorAll('.article-preview').forEach(preview => {
+        if (preview !== articlePreview) {
+            const otherReadMore = preview.querySelector('.read-more');
+            if (otherReadMore) {
+                otherReadMore.textContent = 'Нажмите чтобы развернуть ▼';
+            }
+        }
+    });
+    
+    // Переключаем текущую статью
+    if (isActive) {
+        articleFull.classList.remove('active');
+        readMoreSpan.textContent = 'Нажмите чтобы развернуть ▼';
+    } else {
+        articleFull.classList.add('active');
+        readMoreSpan.textContent = 'Свернуть ▲';
+    }
+}
+
+// === ФУНКЦИИ ДЛЯ НАВИГАЦИИ В ЭКО-ГОРОДЕ ===
+function showEcoCityTab(tabName) {
+    // Скрыть все вкладки эко-города
+    document.querySelectorAll('.ecocity-tab').forEach(tab => {
+        tab.classList.remove('active');
+    });
+    
+    // Убрать активный класс у кнопок
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.classList.remove('active');
+    });
+    
+    // Показать нужную вкладку
+    document.getElementById(`ecocity-${tabName}`).classList.add('active');
+    
+    // Активировать кнопку
+    event.target.classList.add('active');
+    
+    // Если открываем форум - загрузить комментарии
+    if (tabName === 'forum') {
+        displayComments();
+    }
 }
 
 // === ФУНКЦИИ ДЛЯ ФОРУМА ===
-let comments = JSON.parse(localStorage.getItem('forumComments')) || [];
-
 function displayComments() {
-  const commentsList = document.getElementById('commentsList');
-  commentsList.innerHTML = '';
-  
-  comments.forEach((comment, index) => {
-    const commentDiv = document.createElement('div');
-    commentDiv.className = 'comment';
-    commentDiv.innerHTML = `
-      <div class="comment-header">
-        <span class="comment-author">${comment.author}</span>
-        <span class="comment-date">${comment.date}</span>
-      </div>
-      <div class="comment-text">${comment.text}</div>
-      ${comment.image ? `<img src="${comment.image}" class="comment-image" alt="Изображение">` : ''}
-      <button onclick="deleteComment(${index})" class="delete-btn">Удалить</button>
-    `;
-    commentsList.appendChild(commentDiv);
-  });
+    const commentsList = document.getElementById('commentsList');
+    commentsList.innerHTML = '';
+    
+    comments.forEach((comment, index) => {
+        const commentDiv = document.createElement('div');
+        commentDiv.className = 'comment';
+        commentDiv.innerHTML = `
+            <div class="comment-header">
+                <span class="comment-author">${comment.author}</span>
+                <span class="comment-date">${comment.date}</span>
+            </div>
+            <div class="comment-text">${comment.text}</div>
+            ${comment.image ? `<img src="${comment.image}" class="comment-image" alt="Изображение" style="max-width: 300px; margin: 10px 0; border-radius: 5px;">` : ''}
+            <button onclick="deleteComment(${index})" class="delete-btn" style="background: #f44336; color: white; border: none; padding: 5px 10px; border-radius: 3px; cursor: pointer; margin-top: 10px;">Удалить</button>
+        `;
+        commentsList.appendChild(commentDiv);
+    });
 }
 
 function addComment(author, text, image = null) {
-  const newComment = {
-    author: author,
-    text: text,
-    image: image,
-    date: new Date().toLocaleString('ru-RU')
-  };
-  
-  comments.unshift(newComment);
-  localStorage.setItem('forumComments', JSON.stringify(comments));
-  displayComments();
-}
-
-// === НАВИГАЦИЯ В РАЗДЕЛЕ ЭКО ГОРОДА ===
-function showEcoCityTab(tabName) {
-  // Скрыть все вкладки
-  document.querySelectorAll('.ecocity-tab').forEach(tab => {
-    tab.classList.remove('active');
-  });
-  
-  // Убрать активный класс у кнопок
-  document.querySelectorAll('.tab-btn').forEach(btn => {
-    btn.classList.remove('active');
-  });
-  
-  // Показать нужную вкладку
-  document.getElementById(`ecocity-${tabName}`).classList.add('active');
-  
-  // Активировать кнопку
-  event.target.classList.add('active');
-  
-  // Если открываем форум - загрузить комментарии
-  if (tabName === 'forum') {
+    const newComment = {
+        author: author,
+        text: text,
+        image: image,
+        date: new Date().toLocaleString('ru-RU')
+    };
+    
+    comments.unshift(newComment);
+    localStorage.setItem('forumComments', JSON.stringify(comments));
     displayComments();
-  }
 }
 
-// Инициализация при загрузке
+function deleteComment(index) {
+    if (confirm('Удалить этот комментарий?')) {
+        comments.splice(index, 1);
+        localStorage.setItem('forumComments', JSON.stringify(comments));
+        displayComments();
+    }
+}
+
+// === ФУНКЦИИ ДЛЯ КАРТЫ ===
+function initMap() {
+    if (currentMap) {
+        currentMap.remove();
+    }
+    
+    currentMap = L.map("map").setView([43.238949, 76.889709], 12);
+    
+    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+        attribution: "&copy; OpenStreetMap contributors"
+    }).addTo(currentMap);
+    
+    L.marker([43.238949, 76.889709]).addTo(currentMap)
+        .bindPopup("Алматы — экоситуация города")
+        .openPopup();
+}
+
+function enableAddMode() {
+    alert('Режим добавления точек включен! Кликните на карте, чтобы добавить пункт приема.');
+}
+
+function showRecyclingPoints() {
+    alert('Пункты приема будут показаны после добавления на карту');
+}
+
+// === ОБЩАЯ ИНИЦИАЛИЗАЦИЯ ===
 document.addEventListener('DOMContentLoaded', function() {
-  // Инициализация форума
-  const forumForm = document.getElementById('forumForm');
-  if (forumForm) {
-    forumForm.addEventListener('submit', function(e) {
-      e.preventDefault();
-      const author = document.getElementById('authorName').value;
-      const text = document.getElementById('commentText').value;
-      const imageFile = document.getElementById('imageUpload').files[0];
-      
-      if (imageFile) {
-        const reader = new FileReader();
-        reader.onload = function(e) {
-          addComment(author, text, e.target.result);
-        };
-        reader.readAsDataURL(imageFile);
-      } else {
-        addComment(author, text);
-      }
+    console.log('DOM loaded, initializing...');
+    
+    // Инициализация бокового меню
+    document.querySelectorAll('.sidebar a[data-tab]').forEach(link => {
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+            const tabId = this.getAttribute('data-tab');
+            openTab(tabId);
+        });
     });
-  }
+    
+    // Инициализация навигации в эко-городе
+    document.querySelectorAll('.tab-btn[data-ecotab]').forEach(btn => {
+        btn.addEventListener('click', function(e) {
+            const tabName = this.getAttribute('data-ecotab');
+            showEcoCityTab(tabName);
+        });
+    });
+    
+    // Инициализация статей
+    document.querySelectorAll('.article-preview').forEach(article => {
+        article.addEventListener('click', function() {
+            const articleId = this.getAttribute('data-article');
+            toggleArticle(articleId);
+        });
+    });
+    
+    // Инициализация форума
+    const forumForm = document.getElementById('forumForm');
+    if (forumForm) {
+        forumForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const author = document.getElementById('authorName').value;
+            const text = document.getElementById('commentText').value;
+            const imageFile = document.getElementById('imageUpload').files[0];
+            
+            if (imageFile) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    addComment(author, text, e.target.result);
+                    document.getElementById('imagePreview').innerHTML = '';
+                };
+                reader.readAsDataURL(imageFile);
+            } else {
+                addComment(author, text);
+            }
+            
+            // Очистка формы
+            this.reset();
+        });
+    }
+    
+    // Инициализация предпросмотра изображений
+    const imageUpload = document.getElementById('imageUpload');
+    if (imageUpload) {
+        imageUpload.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById('imagePreview').innerHTML = 
+                        `<img src="${e.target.result}" alt="Предпросмотр" style="max-width: 200px; max-height: 200px; border-radius: 5px; margin-top: 10px;">`;
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+    }
+    
+    // Инициализация теста
+    initTest();
+    
+    // Активируем первую вкладку
+    openTab('main');
 });
